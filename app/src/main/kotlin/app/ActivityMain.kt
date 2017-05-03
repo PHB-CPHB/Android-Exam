@@ -1,15 +1,24 @@
 package app
 
-import android.app.Activity
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_main.*
+import android.support.v4.app.FragmentActivity
 
-class ActivityMain : Activity()
-{
+class ActivityMain : FragmentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        heading.text = "AndroidApp"
+        if (savedInstanceState != null) return // already instantiated
+        val amlogin = AMLogin()
+        amlogin.arguments = intent.extras // arguments exist
+
+        supportFragmentManager
+                .beginTransaction()
+                .add(R.id.fragment_container, amlogin)
+                .commit()
+
     }
+
+
 }
