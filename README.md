@@ -19,6 +19,7 @@ Appen skal fungere ligesom Imessage og den er meningen at man skal kunne sende b
  - Audio besked (Tale besked) <br>
  - Lave en website hvor man kan logge ind og se beskeder. (React/Express)?? <br>
 
+ ![alt text](https://github.com/philliphb/Android-Exam/blob/master/Appen.png) <br>
 
 #### Features <br>
 ##### Must have <br>
