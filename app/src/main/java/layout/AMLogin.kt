@@ -7,7 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import app.ActivityMain
 import app.R
-import kotlinx.android.synthetic.main.fragment_amlogin.view.*
+import kotlinx.android.synthetic.main.fragment_am_login.view.*
+import org.jetbrains.anko.onClick
 
 
 class AMLogin : Fragment() {
