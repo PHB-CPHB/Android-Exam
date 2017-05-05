@@ -46,7 +46,6 @@ Appen skal fungere ligesom Imessage og det er meningen at man skal kunne sende b
   - "Besked felt" her er historikken for den man har skrevet med.
   - "Knap" brugers til at sende billeder, videoer, talebeskeder eller sin lokation.
   - "Besked du vil sende" Her skriver man sin bedsked.
-<br>
 #### Features <br>
 ##### Must have <br>
  - Send besked / oprette besked
