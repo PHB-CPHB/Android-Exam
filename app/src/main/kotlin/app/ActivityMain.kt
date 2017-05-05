@@ -9,7 +9,7 @@ import layout.AMOwerview
 
 class ActivityMain : FragmentActivity() {
     val amlogin = AMLogin()
-    val amchat = AMOwerview()
+    val amoverview = AMOwerview()
     val amchat = AMChat()
     val amnewmessage = AMNewMessage()
 
@@ -26,7 +26,7 @@ class ActivityMain : FragmentActivity() {
                 // .add takes the fragment and makes it so make sure all fragments are here
                 //!!!LÆS OP!!!
                 .add(R.id.fragment_container, amlogin)
-                .add(R.id.fragment_container, amchat)
+                .add(R.id.fragment_container, amoverview)
                 .add(R.id.fragment_container, amchat)
                 .add(R.id.fragment_container, amnewmessage)
                 /**
@@ -34,7 +34,7 @@ class ActivityMain : FragmentActivity() {
                  * .hide hides all the fragments we dont want to show right now.
                  * amlogin should be the one that we are starting on.
                  */
-                .hide(amchat)
+                .hide(amoverview)
                 .hide(amchat)
                 .hide(amnewmessage)
                 .commit()
@@ -44,7 +44,7 @@ class ActivityMain : FragmentActivity() {
         supportFragmentManager
                 .beginTransaction()
                 .show(amchat)
-                .hide(amlogin)
+                .hide(amoverview)
                 .commit()
     }
         // Function that show the amlogin fragment
@@ -52,7 +52,7 @@ class ActivityMain : FragmentActivity() {
         supportFragmentManager
                 .beginTransaction()
                 .show(amlogin)
-                .hide(amchat)
+                .hide(amoverview)
                 .commit()
     }
 
@@ -61,7 +61,7 @@ class ActivityMain : FragmentActivity() {
         supportFragmentManager
                 .beginTransaction()
                 .show(amchat)
-                .hide(amchat)
+                .hide(amoverview)
                 .commit()
     }
 
