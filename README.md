@@ -29,8 +29,7 @@ Appen skal fungere ligesom Imessage og det er meningen at man skal kunne sende b
   - "Logo eller App-navn" i toppen.
   - "Username" and "Password" bruges til login knappen.
   Looks in the database, local on the phone (SQLLite) if it exsist collects token form phone to get chat from server. If the user do not exsist connects to main server to see if user exsist in main database and collects userinformation and token.
-  - "Log in" knappen kigger i den locale database (SQLLite) på telefonen for at se om brugere har være logget ind. Hvis brugere har været    logget in så gider den token til at lave sikkert get klad for at hente besked historik fra hoved databasen. Hvis bruger ikke har været på telefonen før så laver den et kald til hoved serveren for at se om bruger ligger i hoved database hvorefter den gemme brugernavn, password og token på telefonen. Hvis det er en gyldig bruger leder den bruger videre til billede 2.
-#### 2: Overview
+  - "Log in" knappen kigger i den locale database (SQLLite) på telefonen for at se om brugere har være logget ind. Hvis brugere har været    logget in så gider den token og telefonnummer til at lave sikkert get kald for at hente besked historik fra hoved databasen.
   - "Logo eller App-navn" udskiftes med Username.
   - Knap "+" brugers til at komme til 3 ny besked.
   - ved tryk på navn eller rundt om kommer man til 4 chat med den specifikke person.
