@@ -3,12 +3,12 @@
 
     <item
         is-multidex="true"
-        jar="/Users/philliphbrink/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.1.2/109c63008b2d569e38696a3178ee2493b0f6c776/kotlin-stdlib-1.1.2.jar"
+        jar="/Users/philliphbrink/AndroidStudioProjects/Android-Exam/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="109c63008b2d569e38696a3178ee2493b0f6c776">
-        <dex dex="/Users/philliphbrink/AndroidStudioProjects/Android-Exam/app/build/intermediates/transforms/dex/debug/folders/1000/10/kotlin-stdlib-1.1.2_c2feb436b95fced0ff519e096d11076348d6b947/classes.dex" />
+        sha1="7469c6036e24920f3341920e672ea9b1f8c1ab17">
+        <dex dex="/Users/philliphbrink/AndroidStudioProjects/Android-Exam/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_397bc255e75e0a9e98021099f85a460025da9689/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -18,24 +18,6 @@
         revision="25.0.2"
         sha1="510aa6efc159983dfbffa676a0dae37568c0a46f">
         <dex dex="/Users/philliphbrink/AndroidStudioProjects/Android-Exam/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_898a1cb2bf72563b41a14e66d1744225d721290d/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/philliphbrink/AndroidStudioProjects/Android-Exam/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="625d08bdb097ead85e6c747159ca70c756f7a6d6">
-        <dex dex="/Users/philliphbrink/AndroidStudioProjects/Android-Exam/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_397bc255e75e0a9e98021099f85a460025da9689/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/philliphbrink/.gradle/caches/modules-2/files-2.1/org.jetbrains.anko/anko-sdk15/0.9.1/cd75e456277ed865a5ab936e011e8df6cc935c0d/anko-sdk15-0.9.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="cd75e456277ed865a5ab936e011e8df6cc935c0d">
-        <dex dex="/Users/philliphbrink/AndroidStudioProjects/Android-Exam/app/build/intermediates/transforms/dex/debug/folders/1000/10/anko-sdk15-0.9.1_fd3e82dce368be2454d43c46c68973e72a618856/classes.dex" />
     </item>
 
 </items>
