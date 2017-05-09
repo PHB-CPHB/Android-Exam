@@ -15,11 +15,11 @@ Appen skal fungere ligesom Imessage og det er meningen at man skal kunne sende b
  - Den skal kunne sende beskeder. <br>
  - Det skal være muligt at sende sin lokation. <br>
  - Det skal være muligt at tage billeder og sende. <br>
- - Besked historik, på ens top 5 skal gemmes i SQLlite databasen på telefoner. <br>
- - Brugernavn og Password skal gemmes på telefonen så den hurtig kan kontrolleres. <br>
- - Token til at lave Get kald skal gemmes i appen, sammen med brugernavn og password. <br>
- - Liste over personer du skrive <br>
- - Knap til at skrive med nye, kan vælge mellem e-mail eller telefonnummer. <br>
+ - Besked historik, skal gemmes i SQLlite databasen på telefoner. <br>
+ - Brugernavn og Password skal gemmes i en ekstern database hvor en token bliver genereret <br>
+ - Token til at lave kald til besked service skal gemmes i appen <br>
+ - Liste over personer du skriver med <br>
+ - Knap til at skrive med nye, kan vælge mellem online besked eller SMS. <br>
  - Audiobesked (Talebesked) <br>
  - Lave en database til hvor alt historikken gemmes. <br>
 
@@ -27,9 +27,7 @@ Appen skal fungere ligesom Imessage og det er meningen at man skal kunne sende b
  ![alt text](https://github.com/philliphb/Android-Exam/blob/master/Appen.png) <br>
 #### 1: Login
   - "Logo eller App-navn" i toppen.
-  - "Username" and "Password" bruges til login knappen.
-  Looks in the database, local on the phone (SQLLite) if it exsist collects token form phone to get chat from server. If the user do not exsist connects to main server to see if user exsist in main database and collects userinformation and token.
-  - "Log in" knappen kigger i den locale database (SQLLite) på telefonen for at se om brugere har være logget ind. Hvis brugere har været    logget in så gider den token og telefonnummer til at lave sikkert get kald for at hente besked historik fra hoved databasen.
+  - "Username" and "Password" bruges til login knappen. Kigger i den eksterne database og henter token til telefonen.
   - "Logo eller App-navn" udskiftes med Username.
   - Knap "+" brugers til at komme til 3 ny besked.
   - ved tryk på navn eller rundt om kommer man til 4 chat med den specifikke person.
@@ -46,11 +44,11 @@ Appen skal fungere ligesom Imessage og det er meningen at man skal kunne sende b
   - "Besked du vil sende" Her skriver man sin bedsked.
 #### Features <br>
 ##### Must have <br>
- - Send besked / oprette besked
- - Logge ind
+ - Send besked online
+ - Send SMS (automatisk)
  - Liste over folk du skriver med
  - Navigere rundt i appen
- - Matche brugernavn og password i SQLLite (På telefonen)
+ - Logge ind og få token via ekstern service
 ##### Nice <br>
  - Sende Billede
  - Sende Lokation
