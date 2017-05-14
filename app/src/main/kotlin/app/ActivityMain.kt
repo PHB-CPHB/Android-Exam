@@ -1,7 +1,14 @@
 package app
 
+import android.app.Activity
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
+import android.support.v7.app.AlertDialog
+import android.telecom.Call
+import android.util.Log
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.common.GooglePlayServicesUtil
 import database.DBController
 import layout.AMChat
 import layout.AMLogin
@@ -16,6 +23,10 @@ class ActivityMain : FragmentActivity() {
     val amnewmessage = AMNewMessage()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        var isAvail = isGooglePlayServicesAvailable(this)
+        if (!isAvail) {
+            Log.d("GooglePlayServices", "Not available")
+        }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val db = DBController.instance.writableDatabase
@@ -84,6 +95,18 @@ class ActivityMain : FragmentActivity() {
                 .show(amnewmessage)
                 .hide(amoverview)
                 .commit()
+    }
+
+     fun isGooglePlayServicesAvailable(activity : Activity) : Boolean {
+        var googleApiAvailability : GoogleApiAvailability = GoogleApiAvailability.getInstance()
+        var status : Int = googleApiAvailability.isGooglePlayServicesAvailable(activity)
+        if(status != ConnectionResult.SUCCESS) {
+            if(googleApiAvailability.isUserResolvableError(status)) {
+                googleApiAvailability.getErrorDialog(activity, status, 2404).show()
+            }
+            return false
+        }
+        return true
     }
 
 
