@@ -31,14 +31,16 @@ class AMLogin : Fragment() {
         fragment.login_button.onClick {
             //Gets Username
             val username = fragment.username_field.text.toString()
-            //Gets Password
-            val password = fragment.password_field.text.toString()
+            //Gets E-mail
+            val email = fragment.email_field.text.toString()
+            //Gets Phonenumber
+            val phonenumber = fragment.phone_number_field.text.toString()
             /**
              * Change view
              * Make sure to call the activity like this when changing view.
              * (activity as ActivityMain).FunctionName
              */
-            (activity as ActivityMain).showOverview(username, password);
+            (activity as ActivityMain).showOverview(username, email, phonenumber);
         }
 
         /**

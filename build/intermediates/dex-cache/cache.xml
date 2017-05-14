@@ -3,12 +3,39 @@
 
     <item
         is-multidex="true"
+        jar="/Users/philliphbrink/.android/build-cache/0b0c235085fb224766b235bbed28849d86b0b2ae/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="29d9916bd9ad8406a53edbafbbce5e18943aa882">
+        <dex dex="/Users/philliphbrink/AndroidStudioProjects/Android-Exam/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_4aae59211c8e6da8c377e1291da0eddb42f4cf75/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/philliphbrink/.android/build-cache/ca52c18a8ff7d3efdaa813cd15c4f894ae59c64b/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="5cba8868595f6aaff54cf7d1798591108cf5611c">
+        <dex dex="/Users/philliphbrink/AndroidStudioProjects/Android-Exam/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_daf7ab4c73802060dbbd53061ca257793d3cdd08/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/philliphbrink/AndroidStudioProjects/Android-Exam/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="b8b3d735d14625ca5b394df5ea063a4abedd008e">
+        sha1="9440916ebc1d824ede29401d5f57988ad5942eb6">
         <dex dex="/Users/philliphbrink/AndroidStudioProjects/Android-Exam/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_397bc255e75e0a9e98021099f85a460025da9689/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/philliphbrink/.android/build-cache/b4f3927b16116e71e26e909e3e27e91090cd15ff/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="9ed08fab37c3a572da1d9ed2bf2e36c8d3e2bc48">
+        <dex dex="/Users/philliphbrink/AndroidStudioProjects/Android-Exam/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_f3cc2756c2704c095cf16b45df3de0a62e31023d/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -18,6 +45,24 @@
         revision="25.0.2"
         sha1="caff8e51a24901cfc9cd7e1cf83d84f4cb0c103b">
         <dex dex="/Users/philliphbrink/AndroidStudioProjects/Android-Exam/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_898a1cb2bf72563b41a14e66d1744225d721290d/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/philliphbrink/.android/build-cache/692ae4bf90566fd6c1e3ff5f36a0d35aa8a6e54c/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="5803db663655ef5cb38c6bcb17ba326fdb9edfbd">
+        <dex dex="/Users/philliphbrink/AndroidStudioProjects/Android-Exam/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_c3c96e620844246e7c57b19041372479cd4445d3/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/philliphbrink/.android/build-cache/6cdf7a29d0958acb09ba8390a658365994f1a9d9/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="dd1d0d84da2cff18f741c63a9c3af7d9aa89fdd6">
+        <dex dex="/Users/philliphbrink/AndroidStudioProjects/Android-Exam/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_1621752ec6e1e210c021a32b43358d6f59ab6fda/classes.dex" />
     </item>
 
 </items>
