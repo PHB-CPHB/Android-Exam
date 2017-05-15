@@ -37,7 +37,9 @@ class AMLogin : Fragment() {
              * Make sure to call the activity like this when changing view.
              * (activity as ActivityMain).FunctionName
              */
+            (activity as ActivityMain).sendMessageToUser("testuser", "Hiiiiiiiiiiii", username, password)
             (activity as ActivityMain).showOverview(username, password);
+
         }
 
         /**

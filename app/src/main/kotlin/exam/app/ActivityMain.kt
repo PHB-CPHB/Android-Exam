@@ -10,6 +10,12 @@ import exam.app.R
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.GooglePlayServicesUtil
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 import exam.app.database.DBController
 import exam.app.layout.AMChat
 import exam.app.layout.AMLogin
@@ -18,6 +24,7 @@ import exam.app.layout.AMOwerview
 import org.jetbrains.anko.toast
 
 class ActivityMain : FragmentActivity() {
+    val TAG = "ActivityMain"
     val amlogin = AMLogin()
     val amoverview = AMOwerview()
     val amchat = AMChat()
@@ -104,6 +111,29 @@ class ActivityMain : FragmentActivity() {
             return false
         }
         return true
+    }
+
+    fun sendMessageToUser(user : String, message : String, email : String, password : String) {
+        Log.d(TAG, "Send message to user called!!!")
+        val mAuth = FirebaseAuth.getInstance()
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, object : OnCompleteListener<AuthResult> {
+            override fun onComplete(task : Task<AuthResult>){
+                if(task.isSuccessful){
+                    Log.d(TAG, "signInWithEmail:success");
+                    var fireUser = mAuth.currentUser!!
+                    dbCall(fireUser, user, message)
+                } else {
+                    Log.e(TAG, "signInWithEmail:error");
+                }
+            }
+        })
+
+    }
+
+    fun dbCall(fUser : FirebaseUser, user : String, message : String){
+        val db = FirebaseDatabase.getInstance()
+        var myRef = db.getReference("users")
+        myRef.child(fUser.uid).setValue(message)
     }
 
 
