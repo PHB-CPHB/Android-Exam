@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import app.R
+import exam.app.R
 
 class AMOverview : Fragment() {
     override fun onCreateView(

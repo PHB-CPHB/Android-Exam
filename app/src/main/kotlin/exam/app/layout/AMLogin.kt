@@ -44,7 +44,7 @@ class AMLogin : Fragment() {
              * (activity as ActivityMain).FunctionName
              */
 
-            (activity as ActivityMain).sendMessageToUser("testuser", "Hiiiiiiiiiiii", username, password)
+            (activity as ActivityMain).sendMessageToUser("testuser", "Hiiiiiiiiiiii", email, password)
             (activity as ActivityMain).showOverview(username, email, phonenumber);
         }
 
