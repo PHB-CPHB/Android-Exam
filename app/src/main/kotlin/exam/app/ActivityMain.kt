@@ -116,17 +116,16 @@ class ActivityMain : FragmentActivity() {
     fun sendMessageToUser(user : String, message : String, email : String, password : String) {
         Log.d(TAG, "Send message to user called!!!")
         val mAuth = FirebaseAuth.getInstance()
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, object : OnCompleteListener<AuthResult> {
-            override fun onComplete(task : Task<AuthResult>){
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) {
+            task ->
                 if(task.isSuccessful){
-                    Log.d(TAG, "signInWithEmail:success");
+                    Log.d(TAG, "signInWithEmail:success")
                     var fireUser = mAuth.currentUser!!
                     dbCall(fireUser, user, message)
                 } else {
-                    Log.e(TAG, "signInWithEmail:error");
+                    Log.e(TAG, "signInWithEmail:error")
                 }
-            }
-        })
+        }
 
     }
 
