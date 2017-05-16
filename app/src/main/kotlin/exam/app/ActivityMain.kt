@@ -3,16 +3,9 @@ package exam.app
 import android.app.Activity
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
-import android.support.v7.app.AlertDialog
-import android.telecom.Call
 import android.util.Log
-import exam.app.R
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.gms.common.GooglePlayServicesUtil
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
