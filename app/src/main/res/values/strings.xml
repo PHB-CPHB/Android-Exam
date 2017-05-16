@@ -2,7 +2,8 @@
     <string name="app_name">AMessage</string>
     <string name="welcome_message">Welcome to AMessage</string>
      <string name="username_label">Username</string> 
-    <string name="password_label">E-Mail</string> 
+    <string name="email_label">E-Mail</string>
+    <string name="password_label">Password</string> 
     <string name="phonenumber_label">Phonenumber</string>
     <string name="create_user">Create User</string> 
     <string name="send_button">Send</string>
