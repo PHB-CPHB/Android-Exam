@@ -19,7 +19,8 @@ class AMLogin : Fragment() {
             savedInstanceState: Bundle?):
             View? {
 
-        /* Inflate the layout for this fragment
+        /*
+        Inflate the layout for this fragment
             Takes the XML code and makes the view.
             ! All buttons should be with fragment
             EX. fragment.BUTTONNAME
@@ -30,16 +31,21 @@ class AMLogin : Fragment() {
         fragment.login_button.onClick {
             //Gets Username
             val username = fragment.username_field.text.toString()
-            //Gets Password
-            val password = fragment.password_field.text.toString()
+            //Gets E-mail
+            val email = fragment.email_field.text.toString()
+            //Gets Phonenumber
+            val phonenumber = fragment.phone_number_field.text.toString()
+
+            //TODO: Get password
+            val password = "123456"
             /**
              * Change view
              * Make sure to call the activity like this when changing view.
              * (activity as ActivityMain).FunctionName
              */
-            (activity as ActivityMain).sendMessageToUser("testuser", "Hiiiiiiiiiiii", username, password)
-            (activity as ActivityMain).showOverview(username, password);
 
+            (activity as ActivityMain).sendMessageToUser("testuser", "Hiiiiiiiiiiii", username, password)
+            (activity as ActivityMain).showOverview(username, email, phonenumber);
         }
 
         /**

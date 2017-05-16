@@ -20,13 +20,13 @@ import exam.app.database.DBController
 import exam.app.layout.AMChat
 import exam.app.layout.AMLogin
 import exam.app.layout.AMNewMessage
-import exam.app.layout.AMOwerview
+import exam.app.layout.AMOverview
 import org.jetbrains.anko.toast
 
 class ActivityMain : FragmentActivity() {
     val TAG = "ActivityMain"
     val amlogin = AMLogin()
-    val amoverview = AMOwerview()
+    val amoverview = AMOverview()
     val amchat = AMChat()
     val amnewmessage = AMNewMessage()
 
@@ -62,15 +62,25 @@ class ActivityMain : FragmentActivity() {
     }
         // Function that show the amoverview fragment
             //Hvis tid kig på at bruge KeyStore.PasswordProtection
-    fun showOverview(username : String, password : String){
-            if (DBController.instance.getUser(username, password)) {
+    fun showOverview(username : String, email : String, phonenumber : String){
+            // Collect token from Google Api
+            val token = "123abc"
+            println("Username = " + username + ", email = " + email + ", phonenumber = " + phonenumber + ", Token = " + token)
+            if (DBController.instance.getUser(username, email, phonenumber, token)) {
                 supportFragmentManager
                         .beginTransaction()
                         .show(amoverview)
                         .hide(amlogin)
                         .commit()
             } else {
-                toast("Wrong username or password please try agian")
+                //Control if username i taken on the server
+                if(username == null ) toast("Username taken")
+                //Control if email i taken on the server
+                else if (email == null) toast("Email used")
+                //Control if phonenumber i taken on the server
+                else if (phonenumber == null) toast("Phonenumber used")
+                //Control if we have a connection
+                else toast("Something went wrong")
             }
 
     }
