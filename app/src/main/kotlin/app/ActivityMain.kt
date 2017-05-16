@@ -6,12 +6,12 @@ import database.DBController
 import layout.AMChat
 import layout.AMLogin
 import layout.AMNewMessage
-import layout.AMOwerview
+import layout.AMOverview
 import org.jetbrains.anko.toast
 
 class ActivityMain : FragmentActivity() {
     val amlogin = AMLogin()
-    val amoverview = AMOwerview()
+    val amoverview = AMOverview()
     val amchat = AMChat()
     val amnewmessage = AMNewMessage()
 

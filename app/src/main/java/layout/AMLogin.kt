@@ -19,7 +19,8 @@ class AMLogin : Fragment() {
             savedInstanceState: Bundle?):
             View? {
 
-        /* Inflate the layout for this fragment
+        /*
+        Inflate the layout for this fragment
             Takes the XML code and makes the view.
             ! All buttons should be with fragment
             EX. fragment.BUTTONNAME
