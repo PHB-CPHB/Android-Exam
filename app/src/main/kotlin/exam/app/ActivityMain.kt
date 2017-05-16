@@ -17,6 +17,10 @@ import exam.app.layout.AMOverview
 import org.jetbrains.anko.toast
 
 class ActivityMain : FragmentActivity() {
+    /**
+     * Make a TAG in every class.
+     * It is used for logging and debugging.
+     */
     val TAG = "ActivityMain"
     val amlogin = AMLogin()
     val amoverview = AMOverview()
