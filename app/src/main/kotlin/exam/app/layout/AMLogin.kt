@@ -27,7 +27,12 @@ class AMLogin : Fragment() {
          */
         val fragment = inflater.inflate(R.layout.fragment_am_login, container, false)
 
-        //
+        /**
+         *  Login button
+         *  Gets Username, email, Phonenumber and Password.
+         *  Connects to firebase and vaildates the user.
+         *  Shows the overview.
+         */
         fragment.login_button.onClick {
             //Gets Username
             val username = fragment.username_field.text.toString()
@@ -43,7 +48,6 @@ class AMLogin : Fragment() {
              * Make sure to call the activity like this when changing view.
              * (activity as ActivityMain).FunctionName
              */
-
             (activity as ActivityMain).sendMessageToUser("testuser", "Hiiiiiiiiiiii", email, password)
             (activity as ActivityMain).showOverview(username, email, phonenumber);
         }

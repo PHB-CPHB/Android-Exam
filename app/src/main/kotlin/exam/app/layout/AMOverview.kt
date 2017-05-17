@@ -5,7 +5,12 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import exam.app.ActivityMain
 import exam.app.R
+import kotlinx.android.synthetic.main.fragment_am_login.view.*
+import kotlinx.android.synthetic.main.fragment_am_overview.view.*
+import org.jetbrains.anko.listView
+import org.jetbrains.anko.onClick
 
 class AMOverview : Fragment() {
     override fun onCreateView(
@@ -20,6 +25,21 @@ class AMOverview : Fragment() {
          *  EX. fragment.BUTTONNAME
          */
         val fragment = inflater.inflate(R.layout.fragment_am_overview, container, false)
+
+        //Set the username in overview
+        //TODO Get the username from login
+        fragment.username_field.setText("Mikkel")
+
+        /**
+         *  New Message button
+         *  Shows the new message fragment
+         */
+        fragment.new_message_button.onClick {
+            (activity as ActivityMain).showNewMessage();
+        }
+
+        var users : MutableList<String> = mutableListOf("Mikkel", "Phillip", "Daniel", "Hazem")
+        fragment.user_list.listView { users }
 
         /**
          * This is that last thing that should happen in the fragment.
