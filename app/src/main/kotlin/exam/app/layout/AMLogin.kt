@@ -35,15 +35,16 @@ class AMLogin : Fragment() {
             val email = fragment.email_field.text.toString()
             //Gets Phonenumber
             val phonenumber = fragment.phone_number_field.text.toString()
+            //Gets Password
+            val password = fragment.password_field.text.toString()
 
-            //TODO: Get password
-            val password = "123456"
+
             /**
              * Change view
              * Make sure to call the activity like this when changing view.
              * (activity as ActivityMain).FunctionName
              */
-
+            //TODO: Make methode to only create user
             (activity as ActivityMain).sendMessageToUser("testuser", "Hiiiiiiiiiiii", email, password)
             (activity as ActivityMain).showOverview(username, email, phonenumber);
         }
