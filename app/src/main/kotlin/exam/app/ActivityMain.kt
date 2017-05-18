@@ -1,9 +1,13 @@
 package exam.app
 
 import android.app.Activity
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
+import android.support.v4.content.ContextCompat
 import android.util.Log
+import android.widget.ListView
+import android.widget.Toast
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.auth.FirebaseAuth
@@ -26,6 +30,7 @@ class ActivityMain : FragmentActivity() {
     val amoverview = AMOverview()
     val amchat = AMChat()
     val amnewmessage = AMNewMessage()
+    val READ_SMS_PERMISSIONS_REQUEST = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -143,4 +148,10 @@ class ActivityMain : FragmentActivity() {
     }
 
 
+    fun showMSG(savedInstanceState: Bundle) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.fragment_am_new_message)
+        var message = findViewById(R.id.messages)
+        var input = findViewById(R.id.inputMSG)
+    }
 }

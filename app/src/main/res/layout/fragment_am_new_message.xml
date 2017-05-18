@@ -8,5 +8,35 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <EditText
+            android:id="@+id/inputMSG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="24dp"
+            android:layout_toStartOf="@+id/button2"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="type here" />
+
+        <Button
+            android:id="@+id/sendMSg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/inputMSG"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="17dp"
+            android:text="SEND" />
+
+        <TextView
+            android:id="@+id/messages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="...mdflmsdklfmksdmkfds"
+            android:visibility="visible"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="80dp" />
     </RelativeLayout>
 </FrameLayout>
