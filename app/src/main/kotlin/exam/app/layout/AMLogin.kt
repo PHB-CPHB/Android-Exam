@@ -48,8 +48,7 @@ class AMLogin : Fragment() {
              * Make sure to call the activity like this when changing view.
              * (activity as ActivityMain).FunctionName
              */
-            (activity as ActivityMain).sendMessageToUser("testuser", "Hiiiiiiiiiiii", email, password)
-            (activity as ActivityMain).showOverview(username, email, phonenumber);
+            (activity as ActivityMain).firebaseLogin(email, password)
         }
 
         /**

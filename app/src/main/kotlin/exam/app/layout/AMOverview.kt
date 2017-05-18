@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import exam.app.ActivityMain
+import exam.app.App
 import exam.app.R
 import kotlinx.android.synthetic.main.fragment_am_login.view.*
 import kotlinx.android.synthetic.main.fragment_am_overview.view.*
@@ -28,7 +29,7 @@ class AMOverview : Fragment() {
 
         //Set the username in overview
         //TODO Get the username from login
-        fragment.username_field.setText("Mikkel")
+        fragment.username_field.setText(App.instance.firebase!!.displayName)
 
         /**
          *  New Message button
