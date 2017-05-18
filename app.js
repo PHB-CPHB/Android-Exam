@@ -2,11 +2,8 @@ var express = require('express')
   , bodyParser = require('body-parser')
   , app = express()
   , firebase = require("firebase")
-
-// Initialize Firebase
-// TODO: Replace with your project's customized code snippet
-var admin = require("firebase-admin");
-var serviceAccount = require("./firebase-service-key.json");
+  , admin = require("firebase-admin")
+  , serviceAccount = require("./firebase-service-key.json")
 
 admin.initializeApp({
   credential: admin.credential.cert({
@@ -21,35 +18,29 @@ app.use(bodyParser.json())
 
 app.post('/', function (req, res) {
   var content = req.body;
-  var finalResponse = "init";
 
   var payload = {
     data: {
-      uEmail: content.email,
-      uToken: content.token,
+      fromEmail: content.from,
+      toEmail: content.to,
       uMsg: content.msg
     }
   }
 
-  admin.messaging().sendToDevice("04XWkkzws0Uu1b86yz3g29HMEdG2", payload)
+  sendMessage(payload);
+
+  res.end();
+})
+
+var sendMessage = (payload) => {
+
+  admin.messaging().sendToDevice("cQxiQDuZhNQ:APA91bEB4CduwEZaxawYY6lEGf_rTZlvMtqUul4jqrVcDpNYLlEHe6se_UkGyYcWO37MGnSDZQ8tBxbL7LQlAzZxDPH3ZrAurgBhw35A69EKFTtaGFOZwYY784uzj4Awjt14RYFhstuh", payload)
     .then(function (response) {
-      // See the MessagingDevicesResponse reference documentation for
-      // the contents of response.
-      console.log("Successfully sent message:", response);
-      finalResponse = response
+      console.log("Successfully sent message:", response)
     })
     .catch(function (error) {
       console.log("Error sending message:", error);
-      finalResponse = response
     });
-
-  /*database.ref("https://exam-app-e819f.firebaseio.com/users/").child("testUser").set({
-    email: uEmail,
-    token: uToken,
-    msg: uMsg
-  }) */
-
-  res.send(finalResponse)
-})
+}
 
 module.exports = app;
