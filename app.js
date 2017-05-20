@@ -26,15 +26,13 @@ app.post('/', function (req, res) {
       uMsg: content.msg
     }
   }
-
-  sendMessage(payload);
-
-  res.end();
+  
+  res.end(sendMessage(payload));
 })
 
 var sendMessage = (payload) => {
 
-  admin.messaging().sendToDevice("cQxiQDuZhNQ:APA91bEB4CduwEZaxawYY6lEGf_rTZlvMtqUul4jqrVcDpNYLlEHe6se_UkGyYcWO37MGnSDZQ8tBxbL7LQlAzZxDPH3ZrAurgBhw35A69EKFTtaGFOZwYY784uzj4Awjt14RYFhstuh", payload)
+  return admin.messaging().sendToDevice("cQxiQDuZhNQ:APA91bEB4CduwEZaxawYY6lEGf_rTZlvMtqUul4jqrVcDpNYLlEHe6se_UkGyYcWO37MGnSDZQ8tBxbL7LQlAzZxDPH3ZrAurgBhw35A69EKFTtaGFOZwYY784uzj4Awjt14RYFhstuh", payload)
     .then(function (response) {
       console.log("Successfully sent message:", response)
     })
