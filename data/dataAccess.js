@@ -2,6 +2,7 @@ var User = require('../model/User')
     , MongoClient = require('mongodb').MongoClient
     , assert = require('assert')
     , url = 'mongodb://localhost:27017/usersdata'
+    , async = require('async')
 
 var db = {};
 
@@ -19,28 +20,12 @@ db.addUser = function (newUser, db, callback) {
 }
 
 db.findUsers = function (db, callback) {
-    // Get the documents collection
-    var result = [];
-    var users = [];
     // Find some documents
-    MongoClient.connect(url, function (err, db) {
-        assert.equal(null, err);
-        var collection = db.collection('userdata');
-        users = collection.find().forEach(function (item) {
-            result.push(item);
-        });
+    var collection = db.collection('userdata');
 
-        return result;
-        console.log(result);
+    collection.find().forEach(function (item) {
+        callback(item);
     })
-
-
-}
-
-
-
-db.getAll = function () {
-
 }
 
 module.exports = db;

@@ -4,11 +4,13 @@ var express = require('express')
   , firebase = require("firebase")
   , admin = require("firebase-admin")
   , serviceAccount = require("./firebase-service-key.json")
-  , mongo = require('mongodb')
-  , MongoClient = require('mongodb').MongoClient
+  , mongodb = require('mongodb')
   , assert = require('assert')
   , database = require('./data/dataAccess')
   , url = 'mongodb://localhost:27017/usersdata'
+  , async = require('async')
+  , MongoClient = mongodb.MongoClient
+  , connection = MongoClient.connect(url);
 
 admin.initializeApp({
   credential: admin.credential.cert({
@@ -41,10 +43,17 @@ app.post('/register', (req, res) => {
 })
 
 app.get('/', (req, res) => {
-  var result = [];
-  results = database.findUsers();
-  console.log("End RESULT!:", results);
-  res.end(JSON.stringify(results));
+  var results = [];
+
+  connection.then(function (db) {
+    db.collection('userdata').find({}).toArray().then(function (docs) {
+      console.log(docs)
+      results = docs
+      res.end(JSON.stringify(results));
+    });
+  });
+
+
 })
 
 app.post('/', (req, res) => {
@@ -57,7 +66,7 @@ app.post('/', (req, res) => {
       uMsg: content.msg
     }
   }
-  
+
   res.end(sendMessage(payload));
 })
 
