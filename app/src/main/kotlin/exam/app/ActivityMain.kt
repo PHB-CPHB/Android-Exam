@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
 import android.util.Log
+import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
 import com.google.android.gms.common.ConnectionResult
@@ -18,6 +19,7 @@ import exam.app.layout.AMChat
 import exam.app.layout.AMLogin
 import exam.app.layout.AMNewMessage
 import exam.app.layout.AMOverview
+import kotlinx.android.synthetic.main.fragment_am_new_message.*
 import org.jetbrains.anko.toast
 
 class ActivityMain : FragmentActivity() {
@@ -105,13 +107,21 @@ class ActivityMain : FragmentActivity() {
     }
 
     // Function that show the ammewmessage fragment
-    fun showNewMessage(){
+    fun showNewMessage() {
         supportFragmentManager
                 .beginTransaction()
                 .show(amnewmessage)
                 .hide(amoverview)
                 .commit()
     }
+
+        fun showNewMessagetest(){
+            supportFragmentManager
+                    .beginTransaction()
+                    .show(amnewmessage)
+                    .hide(amlogin)
+                    .commit()
+        }
 
      fun isGooglePlayServicesAvailable(activity : Activity) : Boolean {
         var googleApiAvailability : GoogleApiAvailability = GoogleApiAvailability.getInstance()
@@ -148,10 +158,6 @@ class ActivityMain : FragmentActivity() {
     }
 
 
-    fun showMSG(savedInstanceState: Bundle) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_am_new_message)
-        var message = findViewById(R.id.messages)
-        var input = findViewById(R.id.inputMSG)
-    }
+
+
 }

@@ -1,26 +1,34 @@
 package exam.app.layout
 
+import android.content.ContentResolver
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import exam.app.R
-import android.Manifest.permission.READ_SMS
-import android.content.Context
 import android.widget.Toast
 import android.content.pm.PackageManager
+import android.database.Cursor
+import android.net.Uri
+import android.provider.Telephony
 import android.support.v4.content.ContextCompat
 import exam.app.Manifest
-import android.support.annotation.NonNull
-import android.Manifest.permission.READ_SMS
 import exam.app.App
-import java.io.FileDescriptor
-import java.io.PrintWriter
+import android.text.method.TextKeyListener.clear
+import android.widget.ArrayAdapter
+import kotlinx.android.synthetic.main.fragment_am_new_message.*
+import android.Manifest.permission.SEND_SMS
+import android.telephony.SmsManager
+import android.widget.EditText
+import android.util.Log
+import kotlinx.android.synthetic.main.fragment_am_new_message.view.*
+import org.jetbrains.anko.onClick
 
 
 class AMNewMessage : Fragment() {
-
+    val TAG = "AMNewMessage"
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -33,24 +41,27 @@ class AMNewMessage : Fragment() {
          *  EX. fragment.BUTTONNAME
          */
         val fragment = inflater.inflate(R.layout.fragment_am_new_message, container, false)
-
+        fragment.sendMSg.onClick {
+            onSendClick("+4553640232", "HEJSA")
+        }
         /**
          * This is that last thing that should happen in the fragment.
          * This where it actually returns the view
          */
+
         return fragment
     }
 
-/* IN PROGRESS
+    //val arrayAdapter : ArrayAdapter()
     private val READ_SMS_PERMISSIONS_REQUEST = 1
 
     fun getPermissionToReadSMS() {
-        if (ContextCompat.checkSelfPermission(App.instance, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(App.instance, android.Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
             if (shouldShowRequestPermissionRationale(
-                    Manifest.permission.READ_SMS)) {
+                    android.Manifest.permission.READ_SMS)) {
                 Toast.makeText(App.instance, "Please allow permission!", Toast.LENGTH_SHORT).show()
             }
-            requestPermissions(arrayOf<String>(Manifest.permission.READ_SMS),
+            requestPermissions(arrayOf<String>(android.Manifest.permission.READ_SMS),
                     READ_SMS_PERMISSIONS_REQUEST)
         }
     }
@@ -71,7 +82,41 @@ class AMNewMessage : Fragment() {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
     }
-*/
+
+    fun refreshSmsInbox() {
+        val contentResolver : ContentResolver = activity.contentResolver
+
+        val smsInboxCursor : Cursor = contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null)
+        if (smsInboxCursor == null) return
+        val indexBody = smsInboxCursor.getColumnIndex("body")
+        val indexAddress = smsInboxCursor.getColumnIndex("address")
+        if (indexBody < 0 || !smsInboxCursor.moveToFirst()) return
+        //arrayAdapter.clear()
+        do {
+            val str = """
+                |SMS From: ${smsInboxCursor.getString(indexAddress)}
+                |${smsInboxCursor.getString(indexBody)}
+                |
+                """.trimMargin()
+            //arrayAdapter.add(str)
+            messages.text = str
+
+        } while (smsInboxCursor.moveToNext())
+    }
+
+
+    var smsManager : SmsManager = SmsManager.getDefault()
+
+    fun onSendClick(phonenumber : String, message : String) {
+        //var input: String = inputMSG!!.text.toString()
+        //Log.d(TAG, input)
+        if (ContextCompat.checkSelfPermission(App.instance, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            getPermissionToReadSMS()
+        } else {
+            smsManager.sendTextMessage(phonenumber, null, message, null, null)
+            Toast.makeText(App.instance, "Message sent!", Toast.LENGTH_SHORT).show()
+        }
+    }
 
 
 }

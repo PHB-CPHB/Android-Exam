@@ -45,8 +45,9 @@ class AMLogin : Fragment() {
              * (activity as ActivityMain).FunctionName
              */
             //TODO: Make methode to only create user
-            (activity as ActivityMain).sendMessageToUser("testuser", "Hiiiiiiiiiiii", email, password)
-            (activity as ActivityMain).showOverview(username, email, phonenumber);
+            //(activity as ActivityMain).sendMessageToUser("testuser", "Hiiiiiiiiiiii", email, password)
+            //(activity as ActivityMain).showOverview(username, email, phonenumber);
+            (activity as ActivityMain).showNewMessagetest()
         }
 
         /**
