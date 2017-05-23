@@ -27,7 +27,7 @@ class MessagingService : FirebaseMessagingService(){
             val notificationBuilder : NotificationCompat.Builder =
                     NotificationCompat.Builder(this)
                             .setSmallIcon(R.drawable.notification_template_icon_bg)
-                            .setContentTitle(p0!!.data.get("fromEmail"))
+                            .setContentTitle(p0!!.data.get("displayName"))
                             .setContentText(p0!!.data.get("uMsg"))
             var resultIntent : Intent  = Intent(this, ActivityMain::class.java)
             var resultPendingIntent = PendingIntent.getActivity(
