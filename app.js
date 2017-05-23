@@ -6,9 +6,7 @@ var express = require('express')
   , serviceAccount = require("./firebase-service-key.json")
   , mongodb = require('mongodb')
   , assert = require('assert')
-  , database = require('./data/dataAccess')
   , url = 'mongodb://localhost:27017/usersdata'
-  , async = require('async')
   , MongoClient = mongodb.MongoClient
   , connection = MongoClient.connect(url);
 
@@ -27,19 +25,16 @@ app.post('/register', (req, res) => {
   var content = req.body;
   var newUser = {
     email: content.email,
-    token: content.token
+    token: content.token,
+    displayName: content.displayName
   }
 
-  MongoClient.connect(url, function (err, db) {
-    assert.equal(null, err);
-    console.log("Connected successfully to server");
-
-    database.addUser(newUser, db, function () {
-      db.close();
-    });
+  connection.then(function (db) {
+    db.collection('userdata').insertOne(newUser, function (err, result) {
+      console.log("Inserted 1 documents into the collection:", result);
+      res.end(JSON.stringify(result))
+    })
   });
-
-  res.end(JSON.stringify(content))
 })
 
 app.get('/', (req, res) => {
@@ -71,14 +66,26 @@ app.post('/', (req, res) => {
 })
 
 var sendMessage = (payload) => {
-
-  return admin.messaging().sendToDevice("cQxiQDuZhNQ:APA91bEB4CduwEZaxawYY6lEGf_rTZlvMtqUul4jqrVcDpNYLlEHe6se_UkGyYcWO37MGnSDZQ8tBxbL7LQlAzZxDPH3ZrAurgBhw35A69EKFTtaGFOZwYY784uzj4Awjt14RYFhstuh", payload)
-    .then(function (response) {
-      console.log("Successfully sent message:", response)
-    })
-    .catch(function (error) {
-      console.log("Error sending message:", error);
-    });
+  getTokenByEmail(payload.data.toEmail, (result) => {
+    
+    admin.messaging().sendToDevice(result[0].token, payload)
+      .then(function (response) {
+        console.log("Successfully sent message")
+      })
+      .catch(function (error) {
+        console.log("Error sending message:", error);
+      });
+  })
 }
+
+var getTokenByEmail = (email, cb) => {
+  var token = ""
+  connection.then(function (db) {
+    db.collection('userdata').find({ "email": email }).limit(1).toArray().then(function (docs) {
+      cb(docs);
+    });
+  })
+}
+
 
 module.exports = app;
