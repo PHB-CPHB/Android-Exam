@@ -15,7 +15,7 @@
             android:layout_marginBottom="13dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="type here"
+            android:hint="@string/input_msg"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
             android:layout_marginStart="28dp" />
@@ -27,9 +27,9 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
+            android:hint="@string/reciever_msg"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="+45" />
+            android:inputType="textPersonName" />
 
         <Button
             android:id="@+id/sendMSg"
@@ -40,16 +40,6 @@
             android:layout_alignBaseline="@+id/inputMSG"
             android:layout_alignBottom="@+id/inputMSG"
             android:layout_alignParentEnd="true" />
-
-        <TextView
-            android:id="@+id/messages"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="...mdflmsdklfmksdmkfds"
-            android:visibility="visible"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="80dp" />
 
     </RelativeLayout>
 </FrameLayout>

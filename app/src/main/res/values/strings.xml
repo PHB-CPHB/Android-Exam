@@ -11,4 +11,6 @@
     <string name="send_picture">Send Picture</string>
      <string name="send_audio">Send Audio</string> 
     <string name="logout_button">Log Out</string>
+    <string name="input_msg">message here</string>
+    <string name="reciever_msg">email/phone</string>
 </resources>
