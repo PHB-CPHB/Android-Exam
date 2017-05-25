@@ -6,7 +6,7 @@ var express = require('express')
   , serviceAccount = require("./firebase-service-key.json")
   , mongodb = require('mongodb')
   , assert = require('assert')
-  , url = 'mongodb://localhost:12345/usersdata'
+  , url = 'mongodb://localhost:1234/usersdata'
   , MongoClient = mongodb.MongoClient
   , connection = MongoClient.connect(url);
 
@@ -29,22 +29,35 @@ app.post('/register', (req, res) => {
     displayName: content.displayName
   }
 
-  connection.then(function (db) {
-    db.collection('userdata').insertOne(newUser, function (err, result) {
-      console.log("Inserted 1 documents into the collection:", result);
-      res.end(JSON.stringify(result))
-    })
-  });
+  var error = {
+    msg: "Email already exists",
+    email: content.email
+  }
+
+  emailExists(content.email, (valid) => {
+    console.log("VALID:", valid)
+    if (valid) {
+      connection.then(function (db) {
+        db.collection('userdata').insertOne(newUser, function (err, result) {
+          console.log("Inserted 1 documents into the collection:", result);
+          error.errObj = err
+          res.end(JSON.stringify(result))
+        })
+      });
+    } else {
+      res.end(JSON.stringify(error))
+    }
+  })
 })
 
 app.get('/', (req, res) => {
-  var results = [];
 
   connection.then(function (db) {
     db.collection('userdata').find({}).toArray().then(function (docs) {
       console.log(docs)
-      results = docs
-      res.end(JSON.stringify(results));
+      res.end(JSON.stringify(docs));
+    }, function (err) {
+      res.end(JSON.stringify(err))
     });
   });
 
@@ -67,13 +80,12 @@ app.post('/', (req, res) => {
 
 var sendMessage = (payload) => {
   getTokenByEmail(payload.data.toEmail, (result) => {
-    
     admin.messaging().sendToDevice(result[0].token, payload)
       .then(function (response) {
-        console.log("Successfully sent message")
+        return response;
       })
       .catch(function (error) {
-        console.log("Error sending message:", error);
+        return error;
       });
   })
 }
@@ -83,6 +95,14 @@ var getTokenByEmail = (email, cb) => {
   connection.then(function (db) {
     db.collection('userdata').find({ "email": email }).limit(1).toArray().then(function (docs) {
       cb(docs);
+    });
+  })
+}
+
+var emailExists = (email, cb) => {
+  return connection.then(function (db) {
+    return db.collection('userdata').findOne({ "email": email }).then(function (result) {
+      cb(result == null);
     });
   })
 }
