@@ -6,7 +6,7 @@ var express = require('express')
   , serviceAccount = require("./firebase-service-key.json")
   , mongodb = require('mongodb')
   , assert = require('assert')
-  , url = 'mongodb://localhost:27017/usersdata'
+  , url = 'mongodb://localhost:12345/usersdata'
   , MongoClient = mongodb.MongoClient
   , connection = MongoClient.connect(url);
 
