@@ -2,23 +2,27 @@ package exam.app.layout
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import exam.app.ActivityMain
 import exam.app.App
+import exam.app.Entity.Friend
 import exam.app.R
-import kotlinx.android.synthetic.main.fragment_am_login.view.*
+import kotlinx.android.synthetic.main.fragment_am_overview.*
 import kotlinx.android.synthetic.main.fragment_am_overview.view.*
-import org.jetbrains.anko.listView
 import org.jetbrains.anko.onClick
 
 class AMOverview : Fragment() {
+    val TAG = "AMOverview"
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
-            savedInstanceState: Bundle?):
-            View? {
+            savedInstanceState: Bundle?): View?
+    {
         /**
          *  Inflate the layout for this fragment
          *  Takes the XML code and makes the view.
@@ -26,10 +30,6 @@ class AMOverview : Fragment() {
          *  EX. fragment.BUTTONNAME
          */
         val fragment = inflater.inflate(R.layout.fragment_am_overview, container, false)
-
-        //Set the username in overview
-        //TODO Get the username from login
-        fragment.username_field.setText(App.instance.firebase!!.displayName)
 
         /**
          *  New Message button
@@ -39,8 +39,9 @@ class AMOverview : Fragment() {
             (activity as ActivityMain).showNewMessage();
         }
 
-        var users : MutableList<String> = mutableListOf("Mikkel", "Phillip", "Daniel", "Hazem")
-        fragment.user_list.listView { users }
+        fragment.friend_list.layoutManager = LinearLayoutManager(this.context)
+        fragment.friend_list.adapter = FriendsList(App.instance.listOfFriends, this)
+        Log.d(TAG + "onCreate ", App.instance.listOfFriends.size.toString())
 
         /**
          * This is that last thing that should happen in the fragment.
@@ -48,4 +49,27 @@ class AMOverview : Fragment() {
          */
         return fragment
     }
+
+    fun onFriendListClick(v: View) {
+        val friend = v.tag as Friend
+        (activity as ActivityMain).showChat(friend);
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //this.friend_list.adapter = FriendsList(App.instance.listOfFriends, this)
+        Log.d(TAG + "onResume ", App.instance.listOfFriends.size.toString())
+        if (App.instance.user == null) overview_label.text = "No user!!!"
+        else {
+            overview_label.text = App.instance.user?.fireBUser?.displayName
+        }
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG + "onStart ", App.instance.listOfFriends.size.toString())
+        //this.friend_list.adapter = FriendsList(App.instance.listOfFriends, this)
+    }
+
 }

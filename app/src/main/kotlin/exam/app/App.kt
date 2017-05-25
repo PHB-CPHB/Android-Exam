@@ -1,11 +1,12 @@
 package exam.app
 
 import android.app.Application
-import com.google.firebase.auth.FirebaseUser
+import exam.app.Entity.Friend
 import exam.app.Entity.User
 
 class App : Application() {
-    var firebase : FirebaseUser? = null
+    var user: User? = null
+    var listOfFriends : List<Friend> = emptyList()
 
     companion object {
         lateinit var instance: App

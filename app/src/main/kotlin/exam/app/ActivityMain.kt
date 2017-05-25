@@ -9,13 +9,13 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
+import exam.app.Entity.Friend
 import exam.app.Entity.User
 import exam.app.database.DBController
 import exam.app.layout.AMChat
 import exam.app.layout.AMLogin
 import exam.app.layout.AMNewMessage
 import exam.app.layout.AMOverview
-import org.jetbrains.anko.toast
 
 class ActivityMain : FragmentActivity() {
     /**
@@ -53,18 +53,22 @@ class ActivityMain : FragmentActivity() {
                  * .hide hides all the fragments we dont want to show right now.
                  * amlogin should be the one that we are starting on.
                  */
-                .hide(amoverview)
-                .hide(amchat)
-                .hide(amnewmessage)
+                .detach(amoverview)
+                .detach(amchat)
+                .detach(amnewmessage)
+                //.hide(amoverview)
+                //.hide(amchat)
+                //.hide(amnewmessage)
                 .commit()
     }
         // Function that show the amoverview fragment
             //Hvis tid kig på at bruge KeyStore.PasswordProtection
     fun showOverview(){
+
                 supportFragmentManager
                         .beginTransaction()
-                        .show(amoverview)
-                        .hide(amlogin)
+                        .attach(amoverview)
+                        .detach(amlogin)
                         .commit()
 
     }
@@ -72,17 +76,18 @@ class ActivityMain : FragmentActivity() {
     fun showLogin(){
         supportFragmentManager
                 .beginTransaction()
-                .show(amlogin)
-                .hide(amoverview)
+                .attach(amlogin)
+                .detach(amoverview)
                 .commit()
     }
 
     // Function that show the amchat fragment
-    fun showChat(){
+    fun showChat(friend : Friend){
+        amchat.friend = friend
         supportFragmentManager
                 .beginTransaction()
-                .show(amchat)
-                .hide(amoverview)
+                .attach(amchat)
+                .detach(amoverview)
                 .commit()
     }
 
@@ -90,8 +95,8 @@ class ActivityMain : FragmentActivity() {
     fun showNewMessage(){
         supportFragmentManager
                 .beginTransaction()
-                .show(amnewmessage)
-                .hide(amoverview)
+                .attach(amnewmessage)
+                .detach(amoverview)
                 .commit()
     }
 
@@ -106,8 +111,13 @@ class ActivityMain : FragmentActivity() {
         }
         return true
     }
-
-    fun firebaseLogin(email : String, password : String) {
+    /**
+     * This is where we login in to firebase and to the app.
+     * @param email : String
+     * @param password : String
+     * @param phonenumber : String
+     */
+    fun firebaseLogin(displayName : String, email : String, password : String, phonenumber : String) {
         Log.d(TAG, "Send message to user called!!!")
         val mAuth = FirebaseAuth.getInstance()
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) {
@@ -115,9 +125,12 @@ class ActivityMain : FragmentActivity() {
                 if(task.isSuccessful){
                     Log.d(TAG, "signInWithEmail:success")
                     var fireUser = mAuth.currentUser!!
-                    App.instance.firebase = fireUser
+                    App.instance.listOfFriends = DBController.instance.getFriends()
                     showOverview()
                 } else {
+                    //TODO: Kald Match og derefter Create på node serveren.
+                    var fireUser = mAuth.currentUser!!
+                    App.instance.user = User(fireUser, password, phonenumber)
                     Log.e(TAG, "signInWithEmail:error")
                 }
         }
@@ -129,6 +142,5 @@ class ActivityMain : FragmentActivity() {
         var myRef = db.getReference("users")
         myRef.child(fUser.uid).setValue(message)
     }
-
 
 }
