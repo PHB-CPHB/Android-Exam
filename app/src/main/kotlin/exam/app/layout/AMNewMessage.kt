@@ -25,6 +25,7 @@ import android.widget.EditText
 import android.util.Log
 import kotlinx.android.synthetic.main.fragment_am_new_message.view.*
 import org.jetbrains.anko.onClick
+import kotlin.coroutines.experimental.EmptyCoroutineContext.plus
 
 
 class AMNewMessage : Fragment() {
@@ -44,11 +45,13 @@ class AMNewMessage : Fragment() {
         getPermissionToReadSMS()
         fragment.sendMSg.onClick {
             onSendClick()
+
         }
         /**
          * This is that last thing that should happen in the fragment.
          * This where it actually returns the view
          */
+
 
         return fragment
     }
@@ -74,7 +77,7 @@ class AMNewMessage : Fragment() {
         if (requestCode == READ_SMS_PERMISSIONS_REQUEST) {
             if (grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(App.instance, "Read SMS permission granted", Toast.LENGTH_SHORT).show()
-                refreshSmsInbox()
+
             } else {
                 Toast.makeText(App.instance, "Read SMS permission denied", Toast.LENGTH_SHORT).show()
             }
@@ -83,28 +86,6 @@ class AMNewMessage : Fragment() {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
     }
-
-    fun refreshSmsInbox() {
-        val contentResolver : ContentResolver = activity.contentResolver
-
-        val smsInboxCursor : Cursor = contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null)
-        if (smsInboxCursor == null) return
-        val indexBody = smsInboxCursor.getColumnIndex("body")
-        val indexAddress = smsInboxCursor.getColumnIndex("address")
-        if (indexBody < 0 || !smsInboxCursor.moveToFirst()) return
-        //arrayAdapter.clear()
-        do {
-            val str = """
-                |SMS From: ${smsInboxCursor.getString(indexAddress)}
-                |${smsInboxCursor.getString(indexBody)}
-                |
-                """.trimMargin()
-            //arrayAdapter.add(str)
-            messages.text = str
-
-        } while (smsInboxCursor.moveToNext())
-    }
-
 
     var smsManager : SmsManager = SmsManager.getDefault()
 
@@ -115,8 +96,9 @@ class AMNewMessage : Fragment() {
             //getPermissionToReadSMS()
         } else {
             smsManager.sendTextMessage(reciever, null, input, null, null)
+            input += messages
             Toast.makeText(App.instance, "Message sent!", Toast.LENGTH_SHORT).show()
-           
+
         }
     }
 
