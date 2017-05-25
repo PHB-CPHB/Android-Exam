@@ -6,14 +6,14 @@ var express = require('express')
   , serviceAccount = require("./firebase-service-key.json")
   , mongodb = require('mongodb')
   , assert = require('assert')
-  , url = 'mongodb://localhost:12345/usersdata'
+  , url = 'mongodb://localhost:27017/usersdata'
   , MongoClient = mongodb.MongoClient
   , connection = MongoClient.connect(url);
 
 var config = {
   apiKey: "AIzaSyA6M4DZqpVed0Z9W7qDSof1S-wNCUGO1as",
   authDomain: "exam-app-e819f.firebaseapp.com",
-  databaseURL: "https:exam-app-e819f.firebaseio.com",
+  databaseURL: "https:exam-app-e819f.firebaseio.com"
 };
 
 firebase.initializeApp(config);
@@ -97,14 +97,24 @@ app.post('/updateToken', (req, res) => {
     db.collection('userdata').updateOne(
       { email: content.email },
       { $set: { phone: content.phone, token: content.token } }, (err, count, status) => {
-          //console.log("Err", err, "Count:", count, "Status", status)
-          res.end(JSON.stringify(count));
+        //console.log("Err", err, "Count:", count, "Status", status)
+        res.end(JSON.stringify(count));
       });
   })
 })
 
 app.post('/match', (req, res) => {
+  var selector = "";
+  req.body.email == null ? selector = { phone: req.body.phone } : selector = { email: req.body.email };
+  var key = Object.getOwnPropertyNames(selector)[0];
 
+  console.log(selector[key])
+  connection.then(function (db) {
+    db.collection('userdata').findOne({ "email": "mzhs@gmail.com" }, (err, docs) => {
+      console.log(docs);
+      res.json(docs);
+    });
+  })
 })
 
 app.post('/send', (req, res) => {
