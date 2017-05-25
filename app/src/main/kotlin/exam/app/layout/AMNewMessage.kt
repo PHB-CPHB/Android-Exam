@@ -90,17 +90,19 @@ class AMNewMessage : Fragment() {
     var smsManager : SmsManager = SmsManager.getDefault()
 
     fun onSendClick() {
-        var input: String = inputMSG!!.text.toString()
-        var reciever: String = reciever!!.text.toString()
+        var input: String = inputMSG.text.toString()
+        var reciever: String = reciever.text.toString()
         if (ContextCompat.checkSelfPermission(App.instance, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
             //getPermissionToReadSMS()
         } else {
-            smsManager.sendTextMessage(reciever, null, input, null, null)
-            input += messages
-            Toast.makeText(App.instance, "Message sent!", Toast.LENGTH_SHORT).show()
+            if (input == null && reciever == null || input == null && reciever == "" || input == "" && reciever == null) {
+                return Toast.makeText(App.instance, "OOppps something went wrong", Toast.LENGTH_SHORT).show()
+            } else {
+                smsManager.sendTextMessage(reciever, null, input, null, null)
+                input += messages
+                Toast.makeText(App.instance, "Message sent!", Toast.LENGTH_SHORT).show()
 
+            }
         }
     }
-
-
 }
