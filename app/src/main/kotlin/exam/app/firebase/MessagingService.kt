@@ -45,8 +45,5 @@ class MessagingService : FirebaseMessagingService(){
             val mNotifyMgr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             mNotifyMgr.notify(mNotificationId, notificationBuilder.build())
         }
-
-
     }
-
 }

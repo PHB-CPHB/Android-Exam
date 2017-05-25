@@ -120,6 +120,21 @@ class ActivityMain : FragmentActivity() {
         return true
     }
 
+    fun authenticate(email: String, password: String) : Boolean {
+        val mAuth = FirebaseAuth.getInstance()
+        var retVal : Boolean = false
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) {
+            task ->
+            if(task.isSuccessful){
+                Log.d(TAG, "signInWithEmail:success")
+                retVal = true
+            } else {
+                Log.e(TAG, "signInWithEmail:error")
+            }
+        }
+        return retVal
+    }
+
     fun sendMessageToUser(user : String, message : String, email : String, password : String) {
         Log.d(TAG, "Send message to user called!!!")
         val mAuth = FirebaseAuth.getInstance()
