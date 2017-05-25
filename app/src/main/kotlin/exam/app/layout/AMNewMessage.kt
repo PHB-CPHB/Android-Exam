@@ -41,8 +41,9 @@ class AMNewMessage : Fragment() {
          *  EX. fragment.BUTTONNAME
          */
         val fragment = inflater.inflate(R.layout.fragment_am_new_message, container, false)
+        getPermissionToReadSMS()
         fragment.sendMSg.onClick {
-            onSendClick("+4553640232", "HEJSA")
+            onSendClick()
         }
         /**
          * This is that last thing that should happen in the fragment.
@@ -107,14 +108,15 @@ class AMNewMessage : Fragment() {
 
     var smsManager : SmsManager = SmsManager.getDefault()
 
-    fun onSendClick(phonenumber : String, message : String) {
-        //var input: String = inputMSG!!.text.toString()
-        //Log.d(TAG, input)
+    fun onSendClick() {
+        var input: String = inputMSG!!.text.toString()
+        var reciever: String = reciever!!.text.toString()
         if (ContextCompat.checkSelfPermission(App.instance, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-            getPermissionToReadSMS()
+            //getPermissionToReadSMS()
         } else {
-            smsManager.sendTextMessage(phonenumber, null, message, null, null)
+            smsManager.sendTextMessage(reciever, null, input, null, null)
             Toast.makeText(App.instance, "Message sent!", Toast.LENGTH_SHORT).show()
+           
         }
     }
 

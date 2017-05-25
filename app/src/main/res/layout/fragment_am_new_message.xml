@@ -12,22 +12,34 @@
             android:id="@+id/inputMSG"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="24dp"
-            android:layout_toStartOf="@+id/sendMSg"
+            android:layout_marginBottom="13dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="type here" />
+            android:text="type here"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="28dp" />
+
+        <EditText
+            android:id="@+id/reciever"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="+45" />
 
         <Button
             android:id="@+id/sendMSg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:text="SEND"
+            android:layout_alignBaseline="@+id/inputMSG"
             android:layout_alignBottom="@+id/inputMSG"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="17dp"
-            android:text="SEND" />
+            android:layout_alignParentEnd="true" />
 
         <TextView
             android:id="@+id/messages"
@@ -38,5 +50,6 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
             android:layout_marginTop="80dp" />
+
     </RelativeLayout>
 </FrameLayout>
