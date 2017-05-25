@@ -102,7 +102,7 @@ class ActivityMain : FragmentActivity() {
         supportFragmentManager
                 .beginTransaction()
                 .show(amchat)
-                .hide(amoverview)
+                .hide(amoverview).hide(amnewmessage)
                 .commit()
     }
 

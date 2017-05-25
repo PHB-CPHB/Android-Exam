@@ -5,8 +5,46 @@
     tools:context="exam.app.layout.AMChat">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/inputMSGChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="31dp"
+            android:ems="10"
+            android:hint="@string/input_msg"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/sendMSGChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"
+            android:text="SEND" />
+
+        <EditText
+            android:id="@+id/recieverChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:hint="@string/reciever_msg"
+            android:inputType="textPersonName" />
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/inputMSGChat"
+            android:layout_alignStart="@+id/recieverChat"
+            android:layout_marginTop="41dp"
+            android:layout_above="@+id/sendMSGChat" />
 
     </RelativeLayout>
 </FrameLayout>

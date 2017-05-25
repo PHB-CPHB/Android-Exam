@@ -23,6 +23,7 @@ import android.Manifest.permission.SEND_SMS
 import android.telephony.SmsManager
 import android.widget.EditText
 import android.util.Log
+import exam.app.ActivityMain
 import kotlinx.android.synthetic.main.fragment_am_new_message.view.*
 import org.jetbrains.anko.onClick
 import kotlin.coroutines.experimental.EmptyCoroutineContext.plus
@@ -42,10 +43,11 @@ class AMNewMessage : Fragment() {
          *  EX. fragment.BUTTONNAME
          */
         val fragment = inflater.inflate(R.layout.fragment_am_new_message, container, false)
+        //val fragmentChat = inflater.inflate(R.layout.fragment_am_chat, container, false)
         getPermissionToReadSMS()
         fragment.sendMSg.onClick {
-            onSendClick()
-
+            onSendClick(inputMSG.text.toString(), reciever.text.toString())
+            (activity as ActivityMain).showChat()
         }
         /**
          * This is that last thing that should happen in the fragment.
@@ -89,9 +91,9 @@ class AMNewMessage : Fragment() {
 
     var smsManager : SmsManager = SmsManager.getDefault()
 
-    fun onSendClick() {
-        var input: String = inputMSG.text.toString()
-        var reciever: String = reciever.text.toString()
+    fun onSendClick(inputString : String, recieverString : String) {
+        var input: String = inputString
+        var reciever: String = recieverString
         if (ContextCompat.checkSelfPermission(App.instance, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
             //getPermissionToReadSMS()
         } else {
@@ -99,10 +101,10 @@ class AMNewMessage : Fragment() {
                 return Toast.makeText(App.instance, "OOppps something went wrong", Toast.LENGTH_SHORT).show()
             } else {
                 smsManager.sendTextMessage(reciever, null, input, null, null)
-                input += messages
                 Toast.makeText(App.instance, "Message sent!", Toast.LENGTH_SHORT).show()
 
             }
         }
     }
+
 }
