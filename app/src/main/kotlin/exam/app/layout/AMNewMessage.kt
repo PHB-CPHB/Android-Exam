@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import exam.app.R
 
 class AMNewMessage : Fragment() {
+    val TAG = "AMNewMessage"
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
