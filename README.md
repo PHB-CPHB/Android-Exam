@@ -28,6 +28,7 @@ Appen skal fungere ligesom Imessage og det er meningen at man skal kunne sende b
 #### 1: Login
   - "Logo eller App-navn" i toppen.
   - "Username" and "Password" bruges til login knappen. Kigger i den eksterne database og henter token til telefonen.
+#### 2: AMOverview
   - "Logo eller App-navn" udskiftes med Username.
   - Knap "+" brugers til at komme til 3 ny besked.
   - ved tryk på navn eller rundt om kommer man til 4 chat med den specifikke person.
