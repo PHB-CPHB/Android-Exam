@@ -41,7 +41,6 @@ class AMOverview : Fragment() {
 
         fragment.friend_list.layoutManager = LinearLayoutManager(this.context)
         fragment.friend_list.adapter = FriendsList(App.instance.listOfFriends, this)
-        Log.d(TAG + "onCreate ", App.instance.listOfFriends.size.toString())
 
         /**
          * This is that last thing that should happen in the fragment.
@@ -58,18 +57,11 @@ class AMOverview : Fragment() {
     override fun onResume() {
         super.onResume()
         //this.friend_list.adapter = FriendsList(App.instance.listOfFriends, this)
-        Log.d(TAG + "onResume ", App.instance.listOfFriends.size.toString())
         if (App.instance.user == null) overview_label.text = "No user!!!"
         else {
             overview_label.text = App.instance.user?.fireBUser?.displayName
         }
 
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG + "onStart ", App.instance.listOfFriends.size.toString())
-        //this.friend_list.adapter = FriendsList(App.instance.listOfFriends, this)
     }
 
 }
