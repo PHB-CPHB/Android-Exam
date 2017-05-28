@@ -100,7 +100,7 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
         instance.use {
             insert(
                     MessageTabel.name,
-                    MessageTabel.id to NULL,
+                    MessageTabel.id to null,
                     MessageTabel.friendEmail to message.friendEmail,
                     MessageTabel.friendPhone to message.friendPhone,
                     MessageTabel.message to message.message,
