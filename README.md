@@ -10,13 +10,13 @@ GET @ "/users"
   
 POST @ "/register"
   
-  // Registers a FB user and saves the complete user in mongodb
+    // Registers a FB user and saves the complete user in mongodb
   
-  Request: {email, password, token, phone, displayName}
+    Request: {email, password, token, phone, displayName}
   
-  Response: OK: {message, FBRes, user}
+    Response: OK: {message, FBRes, user}
   
-  ERROR: {error, code (FB Code), email}  
+    ERROR: {error, code (FB Code), email}  
             
 POST @ "/updateToken"
   
