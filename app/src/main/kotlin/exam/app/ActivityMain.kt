@@ -21,11 +21,6 @@ import exam.app.layout.AMChat
 import exam.app.layout.AMLogin
 import exam.app.layout.AMNewMessage
 import exam.app.layout.AMOverview
-<<<<<<< HEAD
-import kotlinx.android.synthetic.main.fragment_am_new_message.*
-import org.jetbrains.anko.toast
-=======
->>>>>>> 61d3a22f294a695f8bc6837aea49b4101d358296
 
 class ActivityMain : FragmentActivity() {
     /**
@@ -97,13 +92,8 @@ class ActivityMain : FragmentActivity() {
         amchat.friend = friend
         supportFragmentManager
                 .beginTransaction()
-<<<<<<< HEAD
-                .show(amchat)
-                .hide(amoverview).hide(amnewmessage)
-=======
                 .attach(amchat)
                 .detach(amoverview)
->>>>>>> 61d3a22f294a695f8bc6837aea49b4101d358296
                 .commit()
     }
 
@@ -135,42 +125,46 @@ class ActivityMain : FragmentActivity() {
         }
         return true
     }
+
+    fun authenticate(email: String, password: String) : Boolean {
+        val mAuth = FirebaseAuth.getInstance()
+        var retVal : Boolean = false
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) {
+            task ->
+            if(task.isSuccessful){
+                Log.d(TAG, "signInWithEmail:success")
+                retVal = true
+            } else {
+                Log.e(TAG, "signInWithEmail:error")
+            }
+        }
+        return retVal
+    }
+
     /**
      * This is where we login in to firebase and to the app.
      * @param email : String
      * @param password : String
      * @param phonenumber : String
      */
-    fun firebaseLogin(displayName : String, email : String, password : String, phonenumber : String) {
+    fun firebaseLogin(displayName : String, email : String, password : String, phonenumber : String) : FirebaseUser? {
         Log.d(TAG, "Send message to user called!!!")
         val mAuth = FirebaseAuth.getInstance()
+        var firebaseUser : FirebaseUser? = null
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) {
             task ->
                 if(task.isSuccessful){
                     Log.d(TAG, "signInWithEmail:success")
-                    var fireUser = mAuth.currentUser!!
-                    App.instance.listOfFriends = DBController.instance.getFriends()
-                    showOverview()
+                    firebaseUser = mAuth.currentUser!!
                 } else {
                     //TODO: Kald Match og derefter Create på node serveren.
-                    var fireUser = mAuth.currentUser!!
-                    App.instance.user = User(fireUser, password, phonenumber)
+                    firebaseUser = null
                     Log.e(TAG, "signInWithEmail:error")
                 }
         }
+        return firebaseUser
 
     }
 
-    fun dbCall(fUser : FirebaseUser, user : String, message : String){
-        val db = FirebaseDatabase.getInstance()
-        var myRef = db.getReference("users")
-        myRef.child(fUser.uid).setValue(message)
-    }
 
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> 61d3a22f294a695f8bc6837aea49b4101d358296
 }

@@ -12,18 +12,11 @@
     <string name="new_message_button">+</string>
     <string name="remove_friend_button">-</string>
     <!-- AMNewmessage -->
-
+    <string name="input_msg">message here</string>
+    <string name="reciever_msg">email/phone</string>
     <!--AMChat -->
     <string name="send_button">Send</string>
     <string name="send_location">Send Location</string>
     <string name="send_picture">Send Picture</string>
-     <string name="send_audio">Send Audio</string> 
-<<<<<<< HEAD
-    <string name="logout_button">Log Out</string>
-    <string name="input_msg">message here</string>
-    <string name="reciever_msg">email/phone</string>
+     <string name="send_audio">Send Audio</string>
 </resources>
-=======
-
-</resources>
->>>>>>> 61d3a22f294a695f8bc6837aea49b4101d358296

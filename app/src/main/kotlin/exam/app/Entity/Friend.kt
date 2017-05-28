@@ -3,7 +3,7 @@ package exam.app.Entity
 data class Friend(
         var displayname : String,
         var email : String?,
-        var phonenumber : Int?
+        var phonenumber : String?
 ) {
 
     //TODO Make all with the friend list

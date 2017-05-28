@@ -59,7 +59,7 @@ class AMOverview : Fragment() {
         //this.friend_list.adapter = FriendsList(App.instance.listOfFriends, this)
         if (App.instance.user == null) overview_label.text = "No user!!!"
         else {
-            overview_label.text = App.instance.user?.fireBUser?.displayName
+            overview_label.text = App.instance.user?.displayName
         }
 
     }

@@ -1,7 +1,5 @@
 package exam.app.layout
 
-import android.content.ContentResolver
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -10,27 +8,24 @@ import android.view.ViewGroup
 import exam.app.R
 import android.widget.Toast
 import android.content.pm.PackageManager
-import android.database.Cursor
-import android.net.Uri
-import android.provider.Telephony
 import android.support.v4.content.ContextCompat
-import exam.app.Manifest
 import exam.app.App
-import android.text.method.TextKeyListener.clear
-import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.fragment_am_new_message.*
-import android.Manifest.permission.SEND_SMS
 import android.telephony.SmsManager
-import android.widget.EditText
-import android.util.Log
 import exam.app.ActivityMain
+import exam.app.Entity.Friend
+import exam.app.database.DBController
+import exam.app.rest.APIController
+import exam.app.rest.ServiceVolley
 import kotlinx.android.synthetic.main.fragment_am_new_message.view.*
 import org.jetbrains.anko.onClick
-import kotlin.coroutines.experimental.EmptyCoroutineContext.plus
+import org.json.JSONObject
 
 
 class AMNewMessage : Fragment() {
     val TAG = "AMNewMessage"
+    val service = ServiceVolley()
+    val apiController = APIController(service)
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -47,7 +42,7 @@ class AMNewMessage : Fragment() {
 
         fragment.sendMSg.onClick {
             onSendClick(inputMSG.text.toString(), reciever.text.toString())
-            (activity as ActivityMain).showChat()
+            //(activity as ActivityMain).showChat() IN PROGRESS
         }
         /**
          * This is that last thing that should happen in the fragment.
@@ -105,6 +100,30 @@ class AMNewMessage : Fragment() {
 
             }
         }
+    }
+
+    fun getMatchedFriend(phone : String?, email : String?) : Friend? {
+        val path = "/match"
+        val params = JSONObject()
+        var friend : Friend? = null
+        if (!email.isNullOrEmpty()){
+            params.put("email", email)
+        } else {
+            params.put("phone", phone)
+        }
+
+        apiController.post(path, params) { response ->
+            if (!response!!.has("error")) {
+                 friend = Friend(
+                        displayname = response.getString("displayName"),
+                        email = response.getString("email"),
+                        phonenumber = response.getString("phone")
+
+                )
+                //DBController.instance.insertFriend(friend) IN PROGRESS
+            }
+        }
+        return friend
     }
 
 }

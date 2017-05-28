@@ -23,7 +23,6 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
                 UserTabel.name,
                 true,
                 UserTabel.id to INTEGER + PRIMARY_KEY,
-                UserTabel.token to TEXT,
                 UserTabel.displayName to TEXT,
                 UserTabel.email to TEXT + UNIQUE,
                 UserTabel.phonenumber to TEXT,
@@ -36,7 +35,7 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
                 FriendTabel.id to INTEGER + PRIMARY_KEY,
                 FriendTabel.displayname to TEXT,
                 FriendTabel.email to TEXT + UNIQUE,
-                FriendTabel.phonenumber to INTEGER
+                FriendTabel.phonenumber to TEXT
 
         )
 
@@ -69,9 +68,8 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
             insert(
                     UserTabel.name,
                     UserTabel.id to 1,
-                    UserTabel.token to user.fireBUser.uid,
-                    UserTabel.displayName to user.fireBUser.displayName,
-                    UserTabel.email to user.fireBUser.email,
+                    UserTabel.displayName to user.displayName,
+                    UserTabel.email to user.email,
                     UserTabel.phonenumber to user.phonenumber,
                     UserTabel.password to user.password
 
@@ -108,7 +106,6 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
         db.insert(
                 UserTabel.name,
                 UserTabel.id to 1,
-                UserTabel.token to "123abc",
                 UserTabel.displayName to "test",
                 UserTabel.email to "test@test.dk",
                 UserTabel.phonenumber to "22334455",
@@ -187,7 +184,7 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
                                     id : Int,
                                     displayName : String,
                                     email : String,
-                                    phonenumber : Int,
+                                    phonenumber : String,
                                     message : List<Message>
                                     -> Friend(displayName, email ,phonenumber)
                                 }
