@@ -9,12 +9,13 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
+import exam.app.Entity.Friend
+import exam.app.Entity.User
 import exam.app.database.DBController
 import exam.app.layout.AMChat
 import exam.app.layout.AMLogin
 import exam.app.layout.AMNewMessage
 import exam.app.layout.AMOverview
-import org.jetbrains.anko.toast
 
 class ActivityMain : FragmentActivity() {
     /**
@@ -52,50 +53,41 @@ class ActivityMain : FragmentActivity() {
                  * .hide hides all the fragments we dont want to show right now.
                  * amlogin should be the one that we are starting on.
                  */
-                .hide(amoverview)
-                .hide(amchat)
-                .hide(amnewmessage)
+                .detach(amoverview)
+                .detach(amchat)
+                .detach(amnewmessage)
+                //.hide(amoverview)
+                //.hide(amchat)
+                //.hide(amnewmessage)
                 .commit()
     }
         // Function that show the amoverview fragment
             //Hvis tid kig på at bruge KeyStore.PasswordProtection
-    fun showOverview(username : String, email : String, phonenumber : String){
-            // Collect token from Google Api
-            val token = "123abc"
-            println("Username = " + username + ", email = " + email + ", phonenumber = " + phonenumber + ", Token = " + token)
-            if (DBController.instance.getUser(username, email, phonenumber, token)) {
+    fun showOverview(){
+
                 supportFragmentManager
                         .beginTransaction()
-                        .show(amoverview)
-                        .hide(amlogin)
+                        .attach(amoverview)
+                        .detach(amlogin)
                         .commit()
-            } else {
-                //Control if username i taken on the server
-                if(username == null ) toast("Username taken")
-                //Control if email i taken on the server
-                else if (email == null) toast("Email used")
-                //Control if phonenumber i taken on the server
-                else if (phonenumber == null) toast("Phonenumber used")
-                //Control if we have a connection
-                else toast("Something went wrong")
-            }
 
     }
         // Function that show the amlogin fragment
     fun showLogin(){
         supportFragmentManager
                 .beginTransaction()
-                .show(amlogin)
-                .hide(amoverview)
+                .attach(amlogin)
+                .detach(amoverview)
                 .commit()
     }
 
     // Function that show the amchat fragment
-    fun showChat(){
+    fun showChat(friend : Friend){
+        amchat.friend = friend
         supportFragmentManager
                 .beginTransaction()
-                .show(amchat)
-                .hide(amoverview)
+                .attach(amchat)
+                .detach(amoverview)
                 .commit()
     }
 
@@ -103,8 +95,8 @@ class ActivityMain : FragmentActivity() {
     fun showNewMessage(){
         supportFragmentManager
                 .beginTransaction()
-                .show(amnewmessage)
-                .hide(amoverview)
+                .attach(amnewmessage)
+                .detach(amoverview)
                 .commit()
     }
 
@@ -135,27 +127,29 @@ class ActivityMain : FragmentActivity() {
         return retVal
     }
 
-    fun sendMessageToUser(user : String, message : String, email : String, password : String) {
+    /**
+     * This is where we login in to firebase and to the app.
+     * @param email : String
+     * @param password : String
+     * @param phonenumber : String
+     */
+    fun firebaseLogin(displayName : String, email : String, password : String, phonenumber : String) : FirebaseUser? {
         Log.d(TAG, "Send message to user called!!!")
         val mAuth = FirebaseAuth.getInstance()
+        var firebaseUser : FirebaseUser? = null
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) {
             task ->
                 if(task.isSuccessful){
                     Log.d(TAG, "signInWithEmail:success")
-                    var fireUser = mAuth.currentUser!!
-                    dbCall(fireUser, user, message)
+                    firebaseUser = mAuth.currentUser!!
                 } else {
+                    //TODO: Kald Match og derefter Create på node serveren.
+                    firebaseUser = null
                     Log.e(TAG, "signInWithEmail:error")
                 }
         }
+        return firebaseUser
 
     }
-
-    fun dbCall(fUser : FirebaseUser, user : String, message : String){
-        val db = FirebaseDatabase.getInstance()
-        var myRef = db.getReference("users")
-        myRef.child(fUser.uid).setValue(message)
-    }
-
 
 }

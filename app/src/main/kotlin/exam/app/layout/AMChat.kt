@@ -5,9 +5,12 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import exam.app.Entity.Friend
 import exam.app.R
 
 class AMChat : Fragment() {
+    var friend: Friend? = null
+    val TAG = "AMChat"
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,

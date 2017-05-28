@@ -1,17 +1,25 @@
 package exam.app.Entity
 
+import com.google.firebase.auth.FirebaseUser
+
 data class User(
-        val id : Int = 0,
-        val username : String,
+        val displayName : String,
         val email : String,
-        val phonenumber : String
-)
+        val phonenumber : String,
+        val password : String
+) {
+    //TODO If users need any methodes
+}
+
+
 
 object UserTabel {
-    val name = "User"
     val id = "id"
-    val username = "username"
+    val name = "User"
+    val displayName = "displayName"
     val email = "email"
     val phonenumber = "phonenumber"
+    val password = "password"
+
 }
 
