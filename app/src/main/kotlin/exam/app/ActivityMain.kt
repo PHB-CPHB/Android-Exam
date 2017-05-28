@@ -179,22 +179,24 @@ class ActivityMain : FragmentActivity() {
         APIService.apiController.post(path, params) {
             response ->
             Log.d(TAG, "waiting for response")
-            if (!response!!.has("error")) {
-                Log.d(TAG, "Have user")
-                var user: User = User(
-                        email = response.getString("email"),
-                        displayName = response.getString("displayName"),
-                        phonenumber = response.getString("phone"),
-                        password = password
-                )
-                DBController.instance.clearUserTable()
-                DBController.instance.insertUser(user)
-                App.instance.user = user
-                Log.d(APIService.TAG, App.instance.regToken!!)
-                App.instance.listOfFriends = DBController.instance.getFriends()
-                updateToken(user.email, App.instance.regToken!!, user.phonenumber)
-                Log.d(TAG, "Showing overview")
-                showOverview()
+            if(response !=  null) {
+                if (!response!!.has("error")) {
+                    Log.d(TAG, "Have user")
+                    var user: User = User(
+                            email = response.getString("email"),
+                            displayName = response.getString("displayName"),
+                            phonenumber = response.getString("phone"),
+                            password = password
+                    )
+                    DBController.instance.clearUserTable()
+                    DBController.instance.insertUser(user)
+                    App.instance.user = user
+                    Log.d(APIService.TAG, App.instance.regToken!!)
+                    App.instance.listOfFriends = DBController.instance.getFriends()
+                    updateToken(user.email, App.instance.regToken!!, user.phonenumber)
+                    Log.d(TAG, "Showing overview")
+                    showOverview()
+                }
             }
         }
     }
