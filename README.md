@@ -2,11 +2,11 @@
 
 GET @ "/users"
   
-  // Returns all users from mongodb
+    // Returns all users from mongodb
   
-  Request: None
+    Request: None
   
-  Response: Returns all users saved in the userdata mongodb collection
+    Response: Returns all users saved in the userdata mongodb collection
   
 POST @ "/register"
   
