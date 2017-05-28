@@ -1,4 +1,5 @@
 <resources>
+    <!-- AMLogin-->
     <string name="app_name">AMessage</string>
     <string name="welcome_message">Welcome to AMessage</string>
      <string name="username_label">Username</string> 
@@ -6,11 +7,23 @@
     <string name="password_label">Password</string> 
     <string name="phonenumber_label">Phonenumber</string>
     <string name="create_user">Create User</string> 
+    <!-- AMOverview -->
+    <string name="logout_button">Log Out</string>
+    <string name="new_message_button">+</string>
+    <string name="remove_friend_button">-</string>
+    <!-- AMNewmessage -->
+
+    <!--AMChat -->
     <string name="send_button">Send</string>
     <string name="send_location">Send Location</string>
     <string name="send_picture">Send Picture</string>
      <string name="send_audio">Send Audio</string> 
+<<<<<<< HEAD
     <string name="logout_button">Log Out</string>
     <string name="input_msg">message here</string>
     <string name="reciever_msg">email/phone</string>
 </resources>
+=======
+
+</resources>
+>>>>>>> 61d3a22f294a695f8bc6837aea49b4101d358296
