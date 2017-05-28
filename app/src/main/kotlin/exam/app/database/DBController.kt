@@ -233,4 +233,29 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
             return emptyList()
         }
     }
+
+    fun getMessagesByFriend(phone : String): List<Message> {
+        try {
+            var messages : List<Message> = emptyList()
+            instance.use {
+                messages = select("Message")
+                        .where("(phonenumber = {userPhone})",
+                                "userPhone" to phone)
+                        .parseList(
+                                rowParser {
+                                    id : Int,
+                                    friendEmail : String,
+                                    friendPhone : String,
+                                    message : String,
+                                    status : Status
+                                    -> Message(friendEmail, friendPhone, message , status)
+                                }
+                        )
+            }
+            return messages
+        } catch (ex: SQLiteException) {
+            println("Exception : " + ex)
+            return emptyList()
+        }
+    }
 }
