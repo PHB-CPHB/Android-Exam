@@ -6,7 +6,7 @@ var express = require('express')
   , serviceAccount = require("./firebase-service-key.json")
   , mongodb = require('mongodb')
   , assert = require('assert')
-  , url = 'mongodb://localhost:12345/usersdata'
+  , url = 'mongodb://localhost:27017/usersdata'
   , MongoClient = mongodb.MongoClient
   , connection = MongoClient.connect(url);
 
@@ -22,23 +22,6 @@ admin.initializeApp({ serviceAccount });
 
 app.use(bodyParser.json())
 
-/* TODO
-
-  /register
-    - tilføj firebase register kald
-    - gem i mongodb hvis alt ok
-    - returner resultat til app
-
-  /updatetoken
-
-  /send
-
-  /match (return user with either phone number or email)
-
-*/
-
-
-
 app.post('/register', (req, res) => {
   var content = req.body;
   var newUser = {
@@ -48,8 +31,7 @@ app.post('/register', (req, res) => {
     displayName: content.displayName
   }
 
-  var error = {
-    errorMessage: "Email already exists",
+  var errorRes = {
     email: content.email
   }
 
@@ -57,25 +39,15 @@ app.post('/register', (req, res) => {
     connection.then(function (db) {
       db.collection('userdata').insertOne(newUser, function (err, result) {
         if (err) res.end(JSON.stringify(err))
-        res.end(JSON.stringify(result))
+        res.end(JSON.stringify({ message: "User successfully registered", FBRes: result, user: newUser }))
       })
     });
   }).catch(function (error) {
     // Handle Errors here.
-    var error = {
-      errorCode: error.code,
-      errorMessage: error.message
-    }
-
-    res.end(JSON.stringify(error))
+    errorRes.code = error.code
+    errorRes.error = error.message
+    res.end(JSON.stringify(errorRes))
   });
-
-  //emailExists(content.email, (valid) => {
-  //console.log("VALID:", valid)
-  //if (valid) {
-  //} else {
-  //  res.end(JSON.stringify(error))
-  //}
 })
 
 app.get('/users', (req, res) => {
@@ -97,7 +69,7 @@ app.post('/updateToken', (req, res) => {
     db.collection('userdata').updateOne(
       { email: content.email },
       { $set: { phone: content.phone, token: content.token } }, (err, count, status) => {
-        //console.log("Err", err, "Count:", count, "Status", status)
+        if (err) res.end(JSON.stringify(err))
         res.end(JSON.stringify(count));
       });
   })
@@ -105,14 +77,17 @@ app.post('/updateToken', (req, res) => {
 
 app.post('/match', (req, res) => {
   var selector = "";
+  if (req.body["email"] == null && req.body["phone"] == null) res.end(JSON.stringify({ error: "Bad request body" }))
   req.body.email == null ? selector = { phone: req.body.phone } : selector = { email: req.body.email };
   var key = Object.getOwnPropertyNames(selector)[0];
+  var obj = {};
+  obj[key] = selector[key];
 
-  console.log(selector[key])
   connection.then(function (db) {
-    db.collection('userdata').findOne({ "email": "mzhs@gmail.com" }, (err, docs) => {
-      console.log(docs);
-      res.json(docs);
+    db.collection('userdata').findOne(obj, (err, docs) => {
+      if (err) res.end(JSON.stringify(err))
+      if (!docs) res.end(JSON.stringify({ error: "No user found" }))
+      res.end(JSON.stringify(docs));
     });
   })
 })
@@ -128,20 +103,18 @@ app.post('/send', (req, res) => {
     }
   }
 
-  res.end(sendMessage(payload));
-})
-
-var sendMessage = (payload) => {
   getTokenByEmail(payload.data.toEmail, (result) => {
+    if (result.length < 1) res.end(JSON.stringify({ error: "Reciever not found" }))
     admin.messaging().sendToDevice(result[0].token, payload)
       .then(function (response) {
-        return response;
+        res.end(JSON.stringify(response.results));
       })
       .catch(function (error) {
-        return error;
+        res.end(JSON.stringify(error));
       });
   })
-}
+
+})
 
 var getTokenByEmail = (email, cb) => {
   var token = ""
