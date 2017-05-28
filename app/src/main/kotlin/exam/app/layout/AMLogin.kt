@@ -8,10 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.auth.FirebaseUser
 import exam.app.ActivityMain
-import exam.app.App
-import exam.app.Entity.User
 import exam.app.R
-import exam.app.database.DBController
 import exam.app.rest.APIController
 import exam.app.rest.ServiceVolley
 import kotlinx.android.synthetic.main.fragment_am_login.view.*
@@ -50,7 +47,7 @@ class AMLogin : Fragment() {
          *  Shows the overview.
          */
 
-        fragment.login_button.onClick {
+        fragment.create_user.onClick {
             //Gets Username
             val displayName = fragment.username_field.text.toString()
             //Gets E-mail
