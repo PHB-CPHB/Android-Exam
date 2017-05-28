@@ -32,7 +32,7 @@ class ActivityMain : FragmentActivity() {
     val amoverview = AMOverview()
     val amchat = AMChat()
     val amnewmessage = AMNewMessage()
-    val READ_SMS_PERMISSIONS_REQUEST = 1
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,8 +109,8 @@ class ActivityMain : FragmentActivity() {
         fun showNewMessagetest(){
             supportFragmentManager
                     .beginTransaction()
-                    .show(amnewmessage)
-                    .hide(amlogin)
+                    .attach(amnewmessage)
+                    .detach(amlogin)
                     .commit()
         }
 

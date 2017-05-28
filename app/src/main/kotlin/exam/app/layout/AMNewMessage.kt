@@ -42,6 +42,7 @@ class AMNewMessage : Fragment() {
 
         fragment.sendMSg.onClick {
             onSendClick(inputMSG.text.toString(), reciever.text.toString())
+            //if(getMatchedFriend())
             //(activity as ActivityMain).showChat() IN PROGRESS
         }
         /**
@@ -53,7 +54,6 @@ class AMNewMessage : Fragment() {
         return fragment
     }
 
-    //val arrayAdapter : ArrayAdapter()
     private val READ_SMS_PERMISSIONS_REQUEST = 1
 
     fun getPermissionToReadSMS() {
@@ -86,19 +86,24 @@ class AMNewMessage : Fragment() {
 
     var smsManager : SmsManager = SmsManager.getDefault()
 
-    fun onSendClick(inputString : String, recieverString : String) {
-        var input: String = inputString
-        var reciever: String = recieverString
+    fun onSendClick(input : String, reciever : String) {
+
         if (ContextCompat.checkSelfPermission(App.instance, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
             getPermissionToReadSMS()
         } else {
-            if (input == null && reciever == null || input == null && reciever == "" || input == "" && reciever == null) {
-                return Toast.makeText(App.instance, "OOppps something went wrong", Toast.LENGTH_SHORT).show()
-            } else {
+            if(Validation.validateEmail(reciever)){
+                //Send online message
+                APIService.matchFriend(reciever, null)
+                APIService.sendMessage(App.instance.user?.displayName, reciever, input)
+                //TODO: Save message in DB
+            } else if (Validation.validatePhonenumber(reciever)) {
+                APIService.matchFriend(null, reciever)
                 smsManager.sendTextMessage(reciever, null, input, null, null)
                 Toast.makeText(App.instance, "Message sent!", Toast.LENGTH_SHORT).show()
-
+            } else {
+                Toast.makeText(App.instance, "We didn't recognize the receiver. Try with a valid email or phone number", Toast.LENGTH_SHORT)
             }
+
         }
     }
 
@@ -114,13 +119,13 @@ class AMNewMessage : Fragment() {
 
         apiController.post(path, params) { response ->
             if (!response!!.has("error")) {
-                 friend = Friend(
+                 var friend = Friend(
                         displayname = response.getString("displayName"),
                         email = response.getString("email"),
                         phonenumber = response.getString("phone")
 
                 )
-                //DBController.instance.insertFriend(friend) IN PROGRESS
+                DBController.instance.insertFriend(friend)
             }
         }
         return friend

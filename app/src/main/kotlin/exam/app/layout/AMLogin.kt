@@ -58,13 +58,15 @@ class AMLogin : Fragment() {
             //Gets Password
             val password = fragment.password_field.text.toString()
 
+            (activity as ActivityMain).showNewMessagetest()
+
 
             /**
              * Change view
              * Make sure to call the activity like this when changing view.
              * (activity as ActivityMain).FunctionName
              */
-
+/*
             if(displayName.trim().equals("")){
                 fragment.username_field.setError("Please enter a Username")
             } else if (!validateEmail(email)){
@@ -86,7 +88,7 @@ class AMLogin : Fragment() {
                     App.instance.user = User(displayName, email, phonenumber, password)
                 }
             }
-
+*/
         }
 
         /**
