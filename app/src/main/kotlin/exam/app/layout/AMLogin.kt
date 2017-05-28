@@ -25,6 +25,8 @@ import java.util.regex.Pattern
 class AMLogin : Fragment() {
     val TAG = "AMLogin"
 
+    var firebaseUser : FirebaseUser? = null
+
     val service = ServiceVolley()
     val apiController = APIController(service)
     override fun onCreateView(
@@ -74,17 +76,8 @@ class AMLogin : Fragment() {
             } else if (password.trim().equals("")) {
                 fragment.password_field.setError("Please enter a Password")
             } else {
-                var firebaseUser : FirebaseUser? = (activity as ActivityMain).firebaseLogin(displayName, email, password, phonenumber)
-                if (firebaseUser != null) {
-                    match(email, null, password)
-                    App.instance.user = User(displayName, email, phonenumber, password)
-                    App.instance.listOfFriends = DBController.instance.getFriends()
-                    updateToken(email, App.instance.regToken!!, phonenumber)
-                    (activity as ActivityMain).showOverview()
-                }else {
-                    createUser(email, password, phonenumber, displayName)
-                    App.instance.user = User(displayName, email, phonenumber, password)
-                }
+                Log.d(TAG, "Logging in...")
+                (activity as ActivityMain).firebaseLogin(displayName, email, password, phonenumber)
             }
         }
 
@@ -96,64 +89,10 @@ class AMLogin : Fragment() {
 
     }
 
-    fun createUser(email : String,
-                   password : String,
-                   phoneNumber : String,
-                   displayName : String) {
-
-        val path = "/register"
-        val params = JSONObject()
-        params.put("email", email)
-        params.put("password", password)
-        params.put("phone", phoneNumber)
-        params.put("displayName", displayName)
-        params.put("token", App.instance.regToken)
-
-        apiController.post(path, params) { response ->
-            if (response!!.has("error")){
-                Log.d(TAG, response.toString())
-            } else {
-                Log.d(TAG, "Error ${response.toString()}")
-            }
-
-        }
+    fun setNewFirebaseUser(firebaseUser: FirebaseUser){
+        this.firebaseUser = firebaseUser
     }
 
-    fun updateToken(email : String, token : String, phone : String){
-        val path = "/updateToken"
-        val params = JSONObject()
-        params.put("email", email)
-        params.put("token", token)
-        params.put("phone", phone)
-
-        apiController.post(path, params) { response ->
-            Log.d(TAG, response.toString())
-        }
-    }
-
-    // Looks in our remote DB to see if a user exists after being authenticated.
-    // If it does, we will insert it into our local DB
-    fun match(email : String?, phone : String?, password: String){
-        val path = "/match"
-        val params = JSONObject()
-        if (!email.isNullOrEmpty()){
-            params.put("email", email)
-        } else {
-            params.put("phone", phone)
-        }
-
-        apiController.post(path, params) { response ->
-            if (!response!!.has("error")) {
-                var user : User = User(
-                        email = response.getString("email"),
-                        displayName = response.getString("displayName"),
-                        phonenumber = response.getString("phone"),
-                        password = password
-                )
-                DBController.instance.insertUser(user)
-            }
-        }
-    }
 
 
     fun sendMessage(from : String, to : String, message : String) {

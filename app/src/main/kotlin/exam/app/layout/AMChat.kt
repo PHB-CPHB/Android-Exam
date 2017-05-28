@@ -2,9 +2,11 @@ package exam.app.layout
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import exam.app.ActivityMain
 import exam.app.Entity.Friend
 import exam.app.R
 
@@ -23,6 +25,7 @@ class AMChat : Fragment() {
          *  EX. fragment.BUTTONNAME
          */
         val fragment = inflater.inflate(R.layout.fragment_am_chat, container, false)
+
 
         /**
          * This is that last thing that should happen in the fragment.
