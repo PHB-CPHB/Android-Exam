@@ -44,7 +44,7 @@ class AMNewMessage : Fragment() {
          */
         val fragment = inflater.inflate(R.layout.fragment_am_new_message, container, false)
         //val fragmentChat = inflater.inflate(R.layout.fragment_am_chat, container, false)
-        getPermissionToReadSMS()
+
         fragment.sendMSg.onClick {
             onSendClick(inputMSG.text.toString(), reciever.text.toString())
             (activity as ActivityMain).showChat()
@@ -95,7 +95,7 @@ class AMNewMessage : Fragment() {
         var input: String = inputString
         var reciever: String = recieverString
         if (ContextCompat.checkSelfPermission(App.instance, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-            //getPermissionToReadSMS()
+            getPermissionToReadSMS()
         } else {
             if (input == null && reciever == null || input == null && reciever == "" || input == "" && reciever == null) {
                 return Toast.makeText(App.instance, "OOppps something went wrong", Toast.LENGTH_SHORT).show()
