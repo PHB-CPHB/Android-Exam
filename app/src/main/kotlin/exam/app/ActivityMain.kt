@@ -3,12 +3,11 @@ package exam.app
 import android.app.Activity
 import android.content.ContentValues
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.util.Log
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.iid.FirebaseInstanceId
@@ -71,6 +70,14 @@ class ActivityMain : FragmentActivity() {
         var refreshedToken : String? = FirebaseInstanceId.getInstance().getToken()
         Log.d(ContentValues.TAG, "Refreshed token: " + refreshedToken)
         App.instance.regToken = refreshedToken
+    }
+
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStack()
+        } else {
+            super.onBackPressed()
+        }
     }
         // Function that show the amoverview fragment
             //Hvis tid kig på at bruge KeyStore.PasswordProtection

@@ -27,7 +27,7 @@ class AMNewMessage : Fragment() {
          *  EX. fragment.BUTTONNAME
          */
         val fragment = inflater.inflate(R.layout.fragment_am_new_message, container, false)
-        
+
         /**
          * This is that last thing that should happen in the fragment.
          * This where it actually returns the view
@@ -38,10 +38,6 @@ class AMNewMessage : Fragment() {
 
 
     fun onBackPressed() {
-        Log.d("CDA", "onBackPressed Called")
-        val setIntent = Intent(Intent.ACTION_MAIN)
-        setIntent.addCategory(Intent.CATEGORY_HOME)
-        setIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(setIntent)
+        (activity as ActivityMain).showOverview()
     }
 }
