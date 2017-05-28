@@ -15,12 +15,11 @@ import com.google.firebase.iid.FirebaseInstanceId
 import exam.app.Entity.Friend
 import exam.app.Entity.User
 import exam.app.database.DBController
-import exam.app.layout.AMChat
-import exam.app.layout.AMLogin
-import exam.app.layout.AMNewMessage
-import exam.app.layout.AMOverview
+import exam.app.layout.*
 import exam.app.rest.APIController
+import exam.app.rest.APIService
 import exam.app.rest.ServiceVolley
+import org.jetbrains.anko.toast
 import org.json.JSONObject
 
 class ActivityMain : FragmentActivity() {
@@ -33,6 +32,7 @@ class ActivityMain : FragmentActivity() {
     val amoverview = AMOverview()
     val amchat = AMChat()
     val amnewmessage = AMNewMessage()
+    val amcreate = AMCreate()
     val service = ServiceVolley()
     val apiController = APIController(service)
 
@@ -56,6 +56,7 @@ class ActivityMain : FragmentActivity() {
                 .add(R.id.fragment_container, amoverview)
                 .add(R.id.fragment_container, amchat)
                 .add(R.id.fragment_container, amnewmessage)
+                .add(R.id.fragment_container, amcreate)
                 /**
                  * Show and hide fragments
                  * .hide hides all the fragments we dont want to show right now.
@@ -64,16 +65,15 @@ class ActivityMain : FragmentActivity() {
                 .detach(amoverview)
                 .detach(amchat)
                 .detach(amnewmessage)
-                //.hide(amoverview)
-                //.hide(amchat)
-                //.hide(amnewmessage)
+                .detach(amcreate)
                 .commit()
         var refreshedToken : String? = FirebaseInstanceId.getInstance().getToken()
         Log.d(ContentValues.TAG, "Refreshed token: " + refreshedToken)
         App.instance.regToken = refreshedToken
     }
-        // Function that show the amoverview fragment
-            //Hvis tid kig på at bruge KeyStore.PasswordProtection
+    /**
+     * Function that shows Overview
+     */
     fun showOverview(){
 
                 supportFragmentManager
@@ -83,16 +83,29 @@ class ActivityMain : FragmentActivity() {
                         .commit()
 
     }
-        // Function that show the amlogin fragment
+    /**
+     * Function that shows Login
+     */
     fun showLogin(){
         supportFragmentManager
                 .beginTransaction()
                 .attach(amlogin)
-                .detach(amoverview)
+                .detach(amcreate)
                 .commit()
     }
-
-    // Function that show the amchat fragment
+    /**
+     * Function that shows create
+     */
+    fun showCreate() {
+        supportFragmentManager
+                .beginTransaction()
+                .attach(amcreate)
+                .detach(amlogin)
+                .commit()
+    }
+    /**
+     * Function that shows Chat
+     */
     fun showChat(friend : Friend){
         amchat.friend = friend
         supportFragmentManager
@@ -101,8 +114,9 @@ class ActivityMain : FragmentActivity() {
                 .detach(amoverview)
                 .commit()
     }
-
-    // Function that show the ammewmessage fragment
+    /**
+     * Function that shows New Message
+     */
     fun showNewMessage(){
         supportFragmentManager
                 .beginTransaction()
@@ -111,40 +125,27 @@ class ActivityMain : FragmentActivity() {
                 .commit()
     }
 
-     fun isGooglePlayServicesAvailable(activity : Activity) : Boolean {
-        var googleApiAvailability : GoogleApiAvailability = GoogleApiAvailability.getInstance()
-        var status : Int = googleApiAvailability.isGooglePlayServicesAvailable(activity)
-        if(status != ConnectionResult.SUCCESS) {
-            if(googleApiAvailability.isUserResolvableError(status)) {
-                googleApiAvailability.getErrorDialog(activity, status, 2404).show()
-            }
-            return false
-        }
-        return true
-    }
-
-    fun authenticate(email: String, password: String) : Boolean {
+    fun register(displayName: String, email: String, password: String, phoneNumber: String) {
         val mAuth = FirebaseAuth.getInstance()
-        var retVal : Boolean = false
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) {
             task ->
             if(task.isSuccessful){
-                Log.d(TAG, "signInWithEmail:success")
-                retVal = true
+                toast("This user is already registered")
+                Log.d(TAG, "User already exist")
             } else {
-                Log.e(TAG, "signInWithEmail:error")
+                Log.d(TAG, "User created")
+                createUser(email, password, phoneNumber, displayName)
+
             }
         }
-        return retVal
     }
 
     /**
      * This is where we login in to firebase and to the app.
      * @param email : String
      * @param password : String
-     * @param phonenumber : String
      */
-    fun firebaseLogin(displayName : String, email : String, password : String, phonenumber : String) {
+    fun firebaseLogin(email : String, password : String) {
         val mAuth = FirebaseAuth.getInstance()
         var firebaseUser : FirebaseUser? = null
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) {
@@ -153,49 +154,28 @@ class ActivityMain : FragmentActivity() {
                     Log.d(TAG, "signInWithEmail:success")
                     firebaseUser = mAuth.currentUser!!
                     Log.d(TAG, "User exists, matching...")
-                    match(email, null, password)
-                    App.instance.user = User(displayName, email, phonenumber, password)
-                    App.instance.listOfFriends = DBController.instance.getFriends()
-                    Log.d(TAG, App.instance.regToken!!)
-                    updateToken(email, App.instance.regToken!!, phonenumber)
-                    showOverview()
+                    matchUser(email, password)
                 } else {
-                    //TODO: Kald Match og derefter Create på node serveren.
-                    Log.d(TAG, "User not found in firebase, registering it now...")
-                    createUser(email, password, phonenumber, displayName)
-                    App.instance.user = User(displayName, email, phonenumber, password)
-                    Log.e(TAG, "signInWithEmail:error")
+                    Log.d(TAG, "User not found in firebase")
+                    toast("Wrong E-Mail or Password")
                 }
         }
 
     }
-    fun updateToken(email : String, token : String, phone : String){
-        val path = "/updateToken"
-        val params = JSONObject()
-        params.put("email", email)
-        params.put("token", token)
-        params.put("phone", phone)
-
-        apiController.post(path, params) { response ->
-            Log.d(TAG, response.toString())
-        }
-    }
-
     // Looks in our remote DB to see if a user exists after being authenticated.
     // If it does, we will insert it into our local DB
-    fun match(email : String?, phone : String?, password: String){
+    fun matchUser(email : String?, password: String) {
         val path = "/match"
         val params = JSONObject()
-        if (!email.isNullOrEmpty()){
+
             params.put("email", email)
-        } else {
-            params.put("phone", phone)
-        }
 
-        apiController.post(path, params) { response ->
+        APIService.apiController.post(path, params) {
+            response ->
+            Log.d(TAG, "waiting for response")
             if (!response!!.has("error")) {
-
-                var user : User = User(
+                Log.d(TAG, "Have user")
+                var user: User = User(
                         email = response.getString("email"),
                         displayName = response.getString("displayName"),
                         phonenumber = response.getString("phone"),
@@ -203,7 +183,25 @@ class ActivityMain : FragmentActivity() {
                 )
                 DBController.instance.clearUserTable()
                 DBController.instance.insertUser(user)
+                App.instance.user = user
+                Log.d(APIService.TAG, App.instance.regToken!!)
+                updateToken(user.email, App.instance.regToken!!, user.phonenumber)
+                App.instance.listOfFriends = DBController.instance.getFriends()
+                Log.d(TAG, "Showing overview")
+                showOverview()
             }
+        }
+    }
+
+    fun updateToken(email : String, token : String, phone : String){
+        val path = "/updateToken"
+        val params = JSONObject()
+        params.put("email", email)
+        params.put("token", token)
+        params.put("phone", phone)
+
+        APIService.apiController.post(path, params) { response ->
+            Log.d(APIService.TAG, response.toString())
         }
     }
 
@@ -220,11 +218,12 @@ class ActivityMain : FragmentActivity() {
         params.put("displayName", displayName)
         params.put("token", App.instance.regToken)
 
-        apiController.post(path, params) { response ->
+        APIService.apiController.post(path, params) { response ->
             if (response!!.has("error")){
-                Log.d(TAG, response.toString())
+                Log.d(APIService.TAG, response.toString())
             } else {
-                Log.d(TAG, "Error ${response.toString()}")
+                Log.d(APIService.TAG, "Logging in the user")
+                firebaseLogin(email, password)
             }
 
         }

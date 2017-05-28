@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.google.firebase.auth.FirebaseUser
 import exam.app.ActivityMain
 import exam.app.R
+import exam.app.Validation
 import exam.app.rest.APIController
 import exam.app.rest.ServiceVolley
 import kotlinx.android.synthetic.main.fragment_am_login.view.*
@@ -24,8 +25,6 @@ class AMLogin : Fragment() {
 
     var firebaseUser : FirebaseUser? = null
 
-    val service = ServiceVolley()
-    val apiController = APIController(service)
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -40,20 +39,19 @@ class AMLogin : Fragment() {
          */
         val fragment = inflater.inflate(R.layout.fragment_am_login, container, false)
 
+        fragment.switch_create.onClick {
+            (activity as ActivityMain).showCreate()
+        }
+
         /**
          *  Login button
-         *  Gets Username, email, Phonenumber and Password.
+         *  Gets email and password.
          *  Connects to firebase and vaildates the user.
          *  Shows the overview.
          */
-
-        fragment.create_user.onClick {
-            //Gets Username
-            val displayName = fragment.username_field.text.toString()
+        fragment.login_button.onClick {
             //Gets E-mail
             val email = fragment.email_field.text.toString()
-            //Gets Phonenumber
-            val phonenumber = fragment.phone_number_field.text.toString()
             //Gets Password
             val password = fragment.password_field.text.toString()
 
@@ -64,17 +62,13 @@ class AMLogin : Fragment() {
              * (activity as ActivityMain).FunctionName
              */
 
-            if(displayName.trim().equals("")){
-                fragment.username_field.setError("Please enter a Username")
-            } else if (!validateEmail(email)){
+            if (!Validation.validateEmail(email)){
                 fragment.email_field.setError("Please enter a valied email")
-            } else if (!validatePhonenumber(phonenumber)){
-                fragment.phone_number_field.setError("Please enter a Phonenumber")
             } else if (password.trim().equals("")) {
                 fragment.password_field.setError("Please enter a Password")
             } else {
                 Log.d(TAG, "Logging in...")
-                (activity as ActivityMain).firebaseLogin(displayName, email, password, phonenumber)
+                (activity as ActivityMain).firebaseLogin(email, password)
             }
         }
 
@@ -86,37 +80,6 @@ class AMLogin : Fragment() {
 
     }
 
-    fun setNewFirebaseUser(firebaseUser: FirebaseUser){
-        this.firebaseUser = firebaseUser
-    }
-
-
-
-    fun sendMessage(from : String, to : String, message : String) {
-        val path = "/"
-        val params = JSONObject()
-        params.put("to", to)
-        params.put("from", from)
-        params.put("message", message)
-        //TODO: What has to happen with the returned data?
-        apiController.post(path, params) { response ->
-            Log.d(TAG, response.toString())
-        }
-    }
-
-    fun validateEmail(email : String) : Boolean {
-        val regex : String = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$"
-        val pattern : Pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE)
-        val matcher : Matcher = pattern.matcher(email)
-        return matcher.matches()
-    }
-
-    fun validatePhonenumber(phonenumber : String) : Boolean {
-        val regex : String = "^\\d{8}$"
-        val pattern : Pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE)
-        val matcher : Matcher = pattern.matcher(phonenumber)
-        return matcher.matches()
-    }
 }
 
 
