@@ -1,6 +1,7 @@
 package exam.app.rest
 
 import android.util.Log
+import android.widget.Toast
 import exam.app.App
 import exam.app.Entity.Friend
 import exam.app.Entity.User
@@ -14,18 +15,18 @@ class APIService {
         val TAG : String = "APIService"
 
         fun sendMessage(from : String, to : String, message : String) {
-            val path = "/"
+            val path = "/send"
             val params = JSONObject()
             params.put("to", to)
             params.put("from", from)
-            params.put("message", message)
+            params.put("msg", message)
             //TODO: What has to happen with the returned data?
             apiController.post(path, params) { response ->
                 Log.d(TAG, response.toString())
             }
         }
 
-        fun getMatchedFriend(email : String?, phone : String?) : Friend? {
+        fun getMatchedFriend(email : String?, phone : String?) {
             val path = "/match"
             val params = JSONObject()
             var friend : Friend? = null
@@ -44,9 +45,10 @@ class APIService {
 
                     )
                     DBController.instance.insertFriend(friend)
+                } else {
+                    Toast.makeText(App.instance, "No user registered with that email address", Toast.LENGTH_SHORT)
                 }
             }
-            return friend
         }
 
         fun updateToken(email : String, token : String, phone : String){

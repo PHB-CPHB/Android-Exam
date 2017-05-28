@@ -14,7 +14,7 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
         //Database Name
         val DB_NAME: String = "users"
         //Database version
-        val DB_VERSION: Int = 4
+        val DB_VERSION: Int = 14
         val instance by lazy { DBController() }
     }
 
@@ -32,7 +32,7 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
         db.createTable(
                 FriendTabel.name,
                 true,
-                FriendTabel.id to INTEGER + PRIMARY_KEY,
+                FriendTabel.id to INTEGER + PRIMARY_KEY + AUTOINCREMENT,
                 FriendTabel.displayname to TEXT,
                 FriendTabel.email to TEXT + UNIQUE,
                 FriendTabel.phonenumber to TEXT
@@ -42,15 +42,16 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
         db.createTable(
                 MessageTabel.name,
                 true,
-                MessageTabel.id to INTEGER + PRIMARY_KEY,
-                MessageTabel.toUser to TEXT,
-                MessageTabel.fromUser to TEXT,
-                MessageTabel.message to TEXT
+                MessageTabel.id to INTEGER + PRIMARY_KEY + AUTOINCREMENT,
+                MessageTabel.friendEmail to TEXT,
+                MessageTabel.friendPhone to TEXT,
+                MessageTabel.message to TEXT,
+                MessageTabel.status to TEXT
         )
 
 
 
-        testData(db)
+       // testData(db)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -78,10 +79,13 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
     }
 
     fun insertFriend(friend: Friend) {
+//      instance.use {
+//           execSQL("INSERT INTO ${FriendTabel.name}  VALUES (NULL, '${friend.displayname}', '${friend.email}', '${friend.phonenumber}');")
+//       }
         instance.use {
             insert(
                     FriendTabel.name,
-                    FriendTabel.id to 1,
+                    FriendTabel.id to null,
                     FriendTabel.displayname to friend.displayname,
                     FriendTabel.email to friend.email,
                     FriendTabel.phonenumber to friend.phonenumber
@@ -90,13 +94,17 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
     }
 
     fun insertMessage(message: Message) {
+       /* instance.use {
+            execSQL("INSERT INTO ${MessageTabel.name} VALUES (null, ${message.friendEmail}, ${message.friendPhone}, ${message.message}, ${message.status});")
+        }*/
         instance.use {
             insert(
                     MessageTabel.name,
-                    MessageTabel.id to 1,
-                    MessageTabel.toUser to message.toUser,
-                    MessageTabel.fromUser to message.fromUser,
-                    MessageTabel.message to message.message
+                    MessageTabel.id to NULL,
+                    MessageTabel.friendEmail to message.friendEmail,
+                    MessageTabel.friendPhone to message.friendPhone,
+                    MessageTabel.message to message.message,
+                    MessageTabel.status to message.status
             )
         }
     }
@@ -107,7 +115,7 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
         }
     }
 
-    fun testData(db: SQLiteDatabase) {
+  /*  fun testData(db: SQLiteDatabase) {
 
         db.insert(
                 UserTabel.name,
@@ -145,7 +153,7 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
                 FriendTabel.phonenumber to null,
                 FriendTabel.message to null
         )
-    }
+    }*/
 
 /*
     fun getUser(currentUsername : String, userEmail : String, userPhonenumber : String, userToken : String) : Boolean {
@@ -190,8 +198,7 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
                                     id : Int,
                                     displayName : String,
                                     email : String,
-                                    phonenumber : String,
-                                    message : List<Message>
+                                    phonenumber : String
                                     -> Friend(displayName, email ,phonenumber)
                                 }
                         )
@@ -199,8 +206,31 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
             return friends
         } catch (ex: SQLiteException) {
             println("Exception : " + ex)
-            return emptyList();
+            return emptyList()
         }
 
+    }
+
+    fun getMessages(): List<Message> {
+        try {
+            var messages : List<Message> = emptyList()
+            instance.use {
+                messages = select("Message")
+                        .parseList(
+                                rowParser {
+                                    id : Int,
+                                    friendEmail : String,
+                                    friendPhone : String,
+                                    message : String,
+                                    status : Status
+                                    -> Message(friendEmail, friendPhone, message , status)
+                                }
+                        )
+            }
+            return messages
+        } catch (ex: SQLiteException) {
+            println("Exception : " + ex)
+            return emptyList()
+        }
     }
 }

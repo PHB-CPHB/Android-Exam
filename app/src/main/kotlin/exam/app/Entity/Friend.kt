@@ -19,10 +19,9 @@ data class Friend(
 }
 
 object FriendTabel {
-    val id = "id"
     val name = "Friend"
+    val id = "id"
     var displayname = "displayname"
     var email = "email"
     var phonenumber = "phonenumber"
-    var message = "message"
 }

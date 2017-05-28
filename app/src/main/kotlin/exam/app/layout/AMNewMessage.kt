@@ -12,7 +12,10 @@ import android.support.v4.content.ContextCompat
 import exam.app.App
 import kotlinx.android.synthetic.main.fragment_am_new_message.*
 import android.telephony.SmsManager
+import android.util.Log
 import exam.app.Entity.Friend
+import exam.app.Entity.Message
+import exam.app.Entity.Status
 import exam.app.Validation
 import exam.app.database.DBController
 import exam.app.rest.APIController
@@ -94,12 +97,16 @@ class AMNewMessage : Fragment() {
         } else {
             if(Validation.validateEmail(reciever)){
                 //Send online message
+                Log.d(TAG, reciever)
                 APIService.getMatchedFriend(reciever, null)
+                Log.d(TAG, "Friend found - sending message")
                 APIService.sendMessage(App.instance.user!!.displayName, reciever, input)
-                //TODO: Save message in DB
             } else if (Validation.validatePhonenumber(reciever)) {
+                Log.d(TAG, "Looks like a phone number")
                 APIService.getMatchedFriend(null, reciever)
                 smsManager.sendTextMessage(reciever, null, input, null, null)
+                DBController.instance.insertFriend(Friend(reciever, null, reciever))
+                DBController.instance.insertMessage(Message("", reciever, input, Status.SENT))
                 Toast.makeText(App.instance, "Message sent!", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(App.instance, "We didn't recognize the receiver. Try with a valid email or phone number", Toast.LENGTH_SHORT)
