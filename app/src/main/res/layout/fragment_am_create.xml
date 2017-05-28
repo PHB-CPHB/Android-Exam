@@ -1,0 +1,103 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="layout.AMLogin">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/welcome_message"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            android:text="@string/welcome_message"
+            android:layout_alignParentTop="true"
+            android:layout_alignLeft="@+id/username_field"
+            android:layout_alignStart="@+id/username_field"
+            android:layout_alignRight="@+id/username_field"
+            android:layout_alignEnd="@+id/username_field" />
+
+        <EditText
+            android:id="@+id/username_field"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="61dp"
+            android:ems="10"
+            android:hint="@string/username_label"
+            android:inputType="textPersonName"
+            android:textAlignment="center"
+            android:text="Mikkel"
+            android:layout_below="@+id/welcome_message"
+            android:layout_alignLeft="@+id/email_field"
+            android:layout_alignStart="@+id/email_field" />
+
+        <EditText
+            android:id="@+id/email_field"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/username_field"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="33dp"
+            android:ems="10"
+            android:hint="@string/email_label"
+            android:inputType="textEmailAddress"
+            android:textAlignment="center"
+            android:text="mzhjensen@gmail.com"/>
+
+        <EditText
+            android:id="@+id/phone_number_field"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_alignEnd="@+id/email_field"
+            android:layout_alignLeft="@+id/email_field"
+            android:layout_alignRight="@+id/email_field"
+            android:layout_alignStart="@+id/email_field"
+            android:layout_below="@+id/email_field"
+            android:layout_marginTop="33dp"
+            android:ems="10"
+            android:hint="@string/phonenumber_label"
+            android:inputType="phone"
+            android:maxLength="8"
+            android:textAlignment="center"
+            android:text="53640232"/>
+
+        <EditText
+            android:id="@+id/password_field"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:hint="@string/password_label"
+            android:textAlignment="center"
+            android:layout_alignEnd="@+id/phone_number_field"
+            android:layout_alignLeft="@+id/phone_number_field"
+            android:layout_alignRight="@+id/phone_number_field"
+            android:layout_alignStart="@+id/phone_number_field"
+            android:layout_below="@+id/phone_number_field"
+            android:layout_marginTop="33dp"
+            android:ems="10"
+            android:inputType="textPassword"
+            android:text="123456"/>
+
+        <Button
+            android:id="@+id/create_user"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="18dp"
+            android:text="@string/create_user" />
+
+        <Button
+            android:id="@+id/switch_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/switch_login"
+            android:layout_below="@+id/welcome_message"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+</FrameLayout>

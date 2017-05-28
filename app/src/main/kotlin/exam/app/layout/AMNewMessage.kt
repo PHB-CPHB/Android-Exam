@@ -13,8 +13,10 @@ import exam.app.App
 import kotlinx.android.synthetic.main.fragment_am_new_message.*
 import android.telephony.SmsManager
 import exam.app.Entity.Friend
+import exam.app.Validation
 import exam.app.database.DBController
 import exam.app.rest.APIController
+import exam.app.rest.APIService
 import exam.app.rest.ServiceVolley
 import kotlinx.android.synthetic.main.fragment_am_new_message.view.*
 import org.jetbrains.anko.onClick
@@ -92,11 +94,11 @@ class AMNewMessage : Fragment() {
         } else {
             if(Validation.validateEmail(reciever)){
                 //Send online message
-                APIService.matchFriend(reciever, null)
-                APIService.sendMessage(App.instance.user?.displayName, reciever, input)
+                APIService.getMatchedFriend(reciever, null)
+                APIService.sendMessage(App.instance.user!!.displayName, reciever, input)
                 //TODO: Save message in DB
             } else if (Validation.validatePhonenumber(reciever)) {
-                APIService.matchFriend(null, reciever)
+                APIService.getMatchedFriend(null, reciever)
                 smsManager.sendTextMessage(reciever, null, input, null, null)
                 Toast.makeText(App.instance, "Message sent!", Toast.LENGTH_SHORT).show()
             } else {
@@ -106,27 +108,5 @@ class AMNewMessage : Fragment() {
         }
     }
 
-    fun getMatchedFriend(phone : String?, email : String?) : Friend? {
-        val path = "/match"
-        val params = JSONObject()
-        var friend : Friend? = null
-        if (!email.isNullOrEmpty()){
-            params.put("email", email)
-        } else {
-            params.put("phone", phone)
-        }
 
-        apiController.post(path, params) { response ->
-            if (!response!!.has("error")) {
-                 var friend = Friend(
-                        displayname = response.getString("displayName"),
-                        email = response.getString("email"),
-                        phonenumber = response.getString("phone")
-
-                )
-                DBController.instance.insertFriend(friend)
-            }
-        }
-        return friend
-    }
 }
