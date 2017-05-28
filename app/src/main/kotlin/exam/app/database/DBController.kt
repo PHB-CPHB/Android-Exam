@@ -101,6 +101,12 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
         }
     }
 
+    fun clearUserTable(){
+        instance.use {
+            delete("User")
+        }
+    }
+
     fun testData(db: SQLiteDatabase) {
 
         db.insert(

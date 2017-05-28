@@ -20,6 +20,7 @@ class AMChat : Fragment() {
 
     val TAG : String = "AMChat"
     var friend: Friend? = null
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -32,9 +33,11 @@ class AMChat : Fragment() {
          *  EX. fragment.BUTTONNAME
          */
         val fragment = inflater.inflate(R.layout.fragment_am_chat, container, false)
+
         fragment.sendMSGChat.onClick {
             onSendClick(inputMSGChat.text.toString(), recieverChat.text.toString())
         }
+
         /**
          * This is that last thing that should happen in the fragment.
          * This where it actually returns the view

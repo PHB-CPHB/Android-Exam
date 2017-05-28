@@ -12,7 +12,6 @@ import android.support.v4.content.ContextCompat
 import exam.app.App
 import kotlinx.android.synthetic.main.fragment_am_new_message.*
 import android.telephony.SmsManager
-import exam.app.ActivityMain
 import exam.app.Entity.Friend
 import exam.app.database.DBController
 import exam.app.rest.APIController
@@ -130,5 +129,4 @@ class AMNewMessage : Fragment() {
         }
         return friend
     }
-
 }
