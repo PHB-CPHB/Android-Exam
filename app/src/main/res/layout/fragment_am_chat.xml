@@ -38,13 +38,16 @@
             android:hint="@string/reciever_msg"
             android:inputType="textPersonName" />
 
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/inputMSGChat"
-            android:layout_alignStart="@+id/recieverChat"
-            android:layout_marginTop="41dp"
-            android:layout_above="@+id/sendMSGChat" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/inputMSGChat"
+            android:layout_below="@+id/recieverChat"
+            android:layout_marginStart="42dp"
+            android:layout_marginTop="29dp"
+            android:text="TextView" />
 
     </RelativeLayout>
 </FrameLayout>

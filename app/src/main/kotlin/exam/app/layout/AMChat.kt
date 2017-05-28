@@ -2,29 +2,38 @@ package exam.app.layout
 
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Message
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.telephony.SmsManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import exam.app.App
 import exam.app.Entity.Friend
 import exam.app.R
+import exam.app.database.DBController
 import kotlinx.android.synthetic.main.fragment_am_chat.*
 import kotlinx.android.synthetic.main.fragment_am_chat.view.*
+import org.jetbrains.anko.editText
 import org.jetbrains.anko.onClick
+import kotlin.coroutines.experimental.EmptyCoroutineContext.plus
 
 class AMChat : Fragment() {
 
     val TAG : String = "AMChat"
     var friend: Friend? = null
+    var dbController = DBController();
+    lateinit var messages: List<Message>;
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
-            savedInstanceState: Bundle?):
+            savedInstanceState: Bundle?
+            //messages = dbController.getMessages(friend.phonenumber)
+        ):
             View? {
         /**
          *  Inflate the layout for this fragment
@@ -33,11 +42,12 @@ class AMChat : Fragment() {
          *  EX. fragment.BUTTONNAME
          */
         val fragment = inflater.inflate(R.layout.fragment_am_chat, container, false)
+        //messages = dbController.getMessagesByFriend(friend.phonenumber)
+        textView.text = messages.joinToString { "\n" }
 
-        fragment.sendMSGChat.onClick {
-            onSendClick(inputMSGChat.text.toString(), recieverChat.text.toString())
+        sendMSGChat.onClick {
+
         }
-
         /**
          * This is that last thing that should happen in the fragment.
          * This where it actually returns the view

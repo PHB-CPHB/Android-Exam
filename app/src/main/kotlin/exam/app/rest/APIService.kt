@@ -41,7 +41,6 @@ class APIService {
                             displayname = response.getString("displayName"),
                             email = response.getString("email"),
                             phonenumber = response.getString("phone")
-
                     )
                     DBController.instance.insertFriend(friend)
                 }

@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat
 import exam.app.App
 import kotlinx.android.synthetic.main.fragment_am_new_message.*
 import android.telephony.SmsManager
+import exam.app.ActivityMain
 import exam.app.Entity.Friend
 import exam.app.Validation
 import exam.app.database.DBController
@@ -27,6 +28,7 @@ class AMNewMessage : Fragment() {
     val TAG = "AMNewMessage"
     val service = ServiceVolley()
     val apiController = APIController(service)
+    val dbController = DBController();
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -89,18 +91,39 @@ class AMNewMessage : Fragment() {
 
     fun onSendClick(input : String, reciever : String) {
 
+        //var friendList : List<Friend> = App.instance.listOfFriends
+
         if (ContextCompat.checkSelfPermission(App.instance, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
             getPermissionToReadSMS()
         } else {
             if(Validation.validateEmail(reciever)){
+
                 //Send online message
-                APIService.getMatchedFriend(reciever, null)
-                APIService.sendMessage(App.instance.user!!.displayName, reciever, input)
+                var friend : Friend? = APIService.getMatchedFriend(reciever, null)
+
+                if(friend != null) {
+                    // TODO: save friend and msg in DB
+                    APIService.sendMessage(App.instance.user!!.displayName, reciever, input)
+                    //dbController.saveUser(friend);
+                    //dbController.saveMessage(friend);
+                    //(activity as ActivityMain).showChat(friend)
+                }else {
+                    Toast.makeText(App.instance, "this friend does not exist", Toast.LENGTH_SHORT)
+                }
                 //TODO: Save message in DB
             } else if (Validation.validatePhonenumber(reciever)) {
-                APIService.getMatchedFriend(null, reciever)
-                smsManager.sendTextMessage(reciever, null, input, null, null)
-                Toast.makeText(App.instance, "Message sent!", Toast.LENGTH_SHORT).show()
+
+                var friend : Friend? = APIService.getMatchedFriend(null, reciever)
+
+                if (friend != null) {
+                    smsManager.sendTextMessage(reciever, null, input, null, null)
+                    //dbController.saveUser(friend);
+                    //dbController.saveMessage(friend);
+                    (activity as ActivityMain).showChat(Friend("","",""))
+                    Toast.makeText(App.instance, "Message sent!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(App.instance, "this friend does not exist", Toast.LENGTH_SHORT).show()
+                }
             } else {
                 Toast.makeText(App.instance, "We didn't recognize the receiver. Try with a valid email or phone number", Toast.LENGTH_SHORT)
             }
