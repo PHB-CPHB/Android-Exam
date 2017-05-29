@@ -12,6 +12,7 @@ import exam.app.ActivityMain
 import exam.app.App
 import exam.app.Entity.Friend
 import exam.app.R
+import exam.app.database.DBController
 import kotlinx.android.synthetic.main.fragment_am_overview.*
 import kotlinx.android.synthetic.main.fragment_am_overview.view.*
 import org.jetbrains.anko.onClick
@@ -23,6 +24,8 @@ class AMOverview : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?): View?
     {
+        App.instance.listOfFriends = DBController.instance.getFriends()
+        Log.d(TAG, "CREATE")
         /**
          *  Inflate the layout for this fragment
          *  Takes the XML code and makes the view.
@@ -51,10 +54,15 @@ class AMOverview : Fragment() {
 
     fun onFriendListClick(v: View) {
         val friend = v.tag as Friend
-        (activity as ActivityMain).showChat(friend);
+        (activity as ActivityMain).showChat(friend)
     }
 
     override fun onResume() {
+        Log.d(TAG, "RESUME")
+        var friends = DBController.instance.getFriends()
+        friends.forEach {
+            Log.d(TAG, it.email)
+        }
         super.onResume()
         //this.friend_list.adapter = FriendsList(App.instance.listOfFriends, this)
         if (App.instance.user == null) overview_label.text = "No user!!!"

@@ -12,10 +12,13 @@ import android.support.v4.content.ContextCompat
 import exam.app.App
 import kotlinx.android.synthetic.main.fragment_am_new_message.*
 import android.telephony.SmsManager
+import android.util.Log
 import exam.app.ActivityMain
-import exam.app.Entity.Friend
-import exam.app.Validation
+import exam.app.Entity.Status
 import exam.app.database.DBController
+import exam.app.Entity.Friend
+import exam.app.Entity.Message
+import exam.app.Validation
 import exam.app.rest.APIController
 import exam.app.rest.APIService
 import exam.app.rest.ServiceVolley
@@ -99,35 +102,47 @@ class AMNewMessage : Fragment() {
             if(Validation.validateEmail(reciever)){
 
                 //Send online message
-                var friend : Friend? = APIService.getMatchedFriend(reciever, null)
-
-                if(friend != null) {
-                    // TODO: save friend and msg in DB
-                    APIService.sendMessage(App.instance.user!!.displayName, reciever, input)
-                    //dbController.saveUser(friend);
-                    //dbController.saveMessage(friend);
-                    //(activity as ActivityMain).showChat(friend)
-                }else {
-                    Toast.makeText(App.instance, "this friend does not exist", Toast.LENGTH_SHORT)
-                }
-                //TODO: Save message in DB
+                Log.d(TAG, reciever)
+                APIService.getMatchedFriend(reciever, null)
+                Log.d(TAG, "Friend found - sending message")
+                APIService.sendMessage(App.instance.user!!.displayName, reciever, input)
+                DBController.instance.insertMessage(Message(reciever, "", input, Status.SENT))
+                showOverview(email = reciever)
             } else if (Validation.validatePhonenumber(reciever)) {
-
-                var friend : Friend? = APIService.getMatchedFriend(null, reciever)
-
-                if (friend != null) {
-                    smsManager.sendTextMessage(reciever, null, input, null, null)
-                    //dbController.saveUser(friend);
-                    //dbController.saveMessage(friend);
-                    (activity as ActivityMain).showChat(Friend("","",""))
-                    Toast.makeText(App.instance, "Message sent!", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(App.instance, "this friend does not exist", Toast.LENGTH_SHORT).show()
-                }
+                Log.d(TAG, "Looks like a phone number")
+                APIService.getMatchedFriend(null, reciever)
+                smsManager.sendTextMessage(reciever, null, input, null, null)
+                DBController.instance.insertFriend(Friend(reciever, null, reciever))
+                DBController.instance.insertMessage(Message("", reciever, input, Status.SENT))
+                Toast.makeText(App.instance, "Message sent!", Toast.LENGTH_SHORT).show()
+                showOverview(phone = reciever)
             } else {
                 Toast.makeText(App.instance, "We didn't recognize the receiver. Try with a valid email or phone number", Toast.LENGTH_SHORT)
             }
 
+        }
+    }
+
+    fun showOverview(email : String = "", phone : String = ""){
+        val path = "/match"
+        val params = JSONObject()
+        if (!email.isNullOrEmpty()){
+            params.put("email", email)
+        } else {
+            params.put("phone", phone)
+        }
+
+        APIService.apiController.post(path, params) { response ->
+            if (!response!!.has("error")) {
+                var friend = Friend(
+                        displayname = response.getString("displayName"),
+                        email = response.getString("email"),
+                        phonenumber = response.getString("phone")
+                )
+                (activity as ActivityMain).showChat(friend)
+            } else {
+                Toast.makeText(App.instance, "No user registered with that email address", Toast.LENGTH_SHORT)
+            }
         }
     }
 
