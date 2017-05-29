@@ -100,7 +100,7 @@ app.post('/send', (req, res) => {
       fromEmail: content.from,
       toEmail: content.to,
       uMsg: content.msg,
-      phone: content.phone
+      uPhone: content.phone
     }
   }
 
