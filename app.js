@@ -107,7 +107,7 @@ app.post('/send', (req, res) => {
     if (result.length < 1) res.end(JSON.stringify({ error: "Reciever not found" }))
     admin.messaging().sendToDevice(result[0].token, payload)
       .then(function (response) {
-        res.end(JSON.stringify(response.results));
+        res.end(JSON.stringify({OK: "OK"}));
       })
       .catch(function (error) {
         res.end(JSON.stringify(error));
