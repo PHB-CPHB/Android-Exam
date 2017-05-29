@@ -82,8 +82,9 @@ class ActivityMain : FragmentActivity() {
 
                 supportFragmentManager
                         .beginTransaction()
-                        .attach(amoverview)
+                        .attach(amoverview).addToBackStack("tag")
                         .detach(amlogin)
+                        .detach(amnewmessage)
                         .commit()
 
     }
@@ -111,13 +112,25 @@ class ActivityMain : FragmentActivity() {
      * Function that shows Chat
      */
     fun showChat(friend : Friend){
+        Log.d(TAG, "Showing chat!")
         amchat.friend = friend
         supportFragmentManager
                 .beginTransaction()
                 .attach(amchat).addToBackStack("tag")
                 .detach(amoverview)
+                .detach(amnewmessage)
                 .commit()
     }
+
+    fun newMsgToChat(friend : Friend){
+        amchat.friend = friend
+        supportFragmentManager
+                .beginTransaction()
+                .attach(amchat).addToBackStack("tag")
+                .detach(amnewmessage)
+                .commit()
+    }
+
 
     /**
      * Function that shows New Message
@@ -125,8 +138,8 @@ class ActivityMain : FragmentActivity() {
     fun showNewMessage(){
         supportFragmentManager
                 .beginTransaction()
-                .attach(amnewmessage).addToBackStack("tag")
-                .detach(amoverview)
+                .attach(amnewmessage)
+                .detach(amoverview).addToBackStack("tag")
                 .commit()
     }
 

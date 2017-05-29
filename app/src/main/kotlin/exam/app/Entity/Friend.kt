@@ -2,13 +2,13 @@ package exam.app.Entity
 
 data class Friend(
         var displayname : String,
-        var email : String?,
-        var phonenumber : String?
+        var email : String,
+        var phonenumber : String
 ) {
 
     //TODO Make all with the friend list
     fun getFriends() : List<Friend>{
-        return emptyList();
+        return emptyList()
     }
 /*
     var messagesText : String

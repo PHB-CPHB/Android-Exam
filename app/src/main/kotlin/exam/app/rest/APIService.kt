@@ -5,6 +5,8 @@ import android.widget.Toast
 import exam.app.ActivityMain
 import exam.app.App
 import exam.app.Entity.Friend
+import exam.app.Entity.Message
+import exam.app.Entity.Status
 import exam.app.Entity.User
 import exam.app.database.DBController
 import org.json.JSONObject
@@ -23,29 +25,29 @@ class APIService {
             params.put("msg", message)
             //TODO: What has to happen with the returned data?
             apiController.post(path, params) { response ->
-                Log.d(TAG, response.toString())
+
             }
         }
 
-        fun getMatchedFriend(email : String?, phone : String?) {
+
+        fun getMatchedFriendSMS(phone : String) {
             val path = "/match"
             val params = JSONObject()
-            if (!email.isNullOrEmpty()){
-                params.put("email", email)
-            } else {
-                params.put("phone", phone)
-            }
+            params.put("phone", phone)
 
             apiController.post(path, params) { response ->
-                if (!response!!.has("error")) {
-                    var friend = Friend(
-                            displayname = response.getString("displayName"),
-                            email = response.getString("email"),
-                            phonenumber = response.getString("phone")
-                    )
-                    DBController.instance.insertFriend(friend)
-                } else {
-                    Toast.makeText(App.instance, "No user registered with that email address", Toast.LENGTH_SHORT)
+                if(response != null) {
+                    if (!response!!.has("error")) {
+                        Log.d(TAG, response.getString("email"))
+                        var friend = Friend(
+                                displayname = response.getString("displayName"),
+                                email = response.getString("email"),
+                                phonenumber = response.getString("phone")
+                        )
+                        DBController.instance.insertFriend(friend)
+                    } else {
+                        DBController.instance.insertFriend(Friend(displayname = phone, email = "", phonenumber = phone))
+                    }
                 }
             }
         }

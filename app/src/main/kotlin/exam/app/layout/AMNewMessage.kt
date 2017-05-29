@@ -103,27 +103,24 @@ class AMNewMessage : Fragment() {
 
                 //Send online message
                 Log.d(TAG, reciever)
-                APIService.getMatchedFriend(reciever, null)
                 Log.d(TAG, "Friend found - sending message")
                 APIService.sendMessage(App.instance.user!!.displayName, reciever, input)
-                DBController.instance.insertMessage(Message(reciever, "", input, Status.SENT))
-                showOverview(email = reciever)
+                getMatchedFriend(reciever, "", input)
+
             } else if (Validation.validatePhonenumber(reciever)) {
                 Log.d(TAG, "Looks like a phone number")
-                APIService.getMatchedFriend(null, reciever)
+                APIService.getMatchedFriendSMS(reciever)
                 smsManager.sendTextMessage(reciever, null, input, null, null)
-                DBController.instance.insertFriend(Friend(reciever, null, reciever))
                 DBController.instance.insertMessage(Message("", reciever, input, Status.SENT))
                 Toast.makeText(App.instance, "Message sent!", Toast.LENGTH_SHORT).show()
-                showOverview(phone = reciever)
+                (activity as ActivityMain).newMsgToChat(DBController.instance.getFriendByPhone(reciever))
             } else {
                 Toast.makeText(App.instance, "We didn't recognize the receiver. Try with a valid email or phone number", Toast.LENGTH_SHORT)
             }
-
         }
     }
 
-    fun showOverview(email : String = "", phone : String = ""){
+    fun showChat(email : String = "", phone : String = ""){
         val path = "/match"
         val params = JSONObject()
         if (!email.isNullOrEmpty()){
@@ -139,7 +136,32 @@ class AMNewMessage : Fragment() {
                         email = response.getString("email"),
                         phonenumber = response.getString("phone")
                 )
-                (activity as ActivityMain).showChat(friend)
+                (activity as ActivityMain).newMsgToChat(friend)
+            } else {
+                Toast.makeText(App.instance, "No user registered with that email address", Toast.LENGTH_SHORT)
+            }
+        }
+    }
+
+    fun getMatchedFriend(email : String, phone : String, message : String) {
+        val path = "/match"
+        val params = JSONObject()
+        if (!email.isNullOrEmpty()){
+            params.put("email", email)
+        } else {
+            params.put("phone", phone)
+        }
+
+        APIService.apiController.post(path, params) { response ->
+            if (!response!!.has("error")) {
+                var friend = Friend(
+                        displayname = response.getString("displayName"),
+                        email = response.getString("email"),
+                        phonenumber = response.getString("phone")
+                )
+                DBController.instance.insertFriend(friend)
+                DBController.instance.insertMessage(Message(email, friend.phonenumber!!, message, Status.SENT))
+                showChat(email, phone)
             } else {
                 Toast.makeText(App.instance, "No user registered with that email address", Toast.LENGTH_SHORT)
             }

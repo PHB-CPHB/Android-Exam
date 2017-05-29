@@ -15,6 +15,7 @@ import exam.app.R
 import exam.app.database.DBController
 import kotlinx.android.synthetic.main.fragment_am_overview.*
 import kotlinx.android.synthetic.main.fragment_am_overview.view.*
+import kotlinx.android.synthetic.main.friend_in_overview_list.view.*
 import org.jetbrains.anko.onClick
 
 class AMOverview : Fragment() {
@@ -39,7 +40,7 @@ class AMOverview : Fragment() {
          *  Shows the new message fragment
          */
         fragment.new_message_button.onClick {
-            (activity as ActivityMain).showNewMessage();
+            (activity as ActivityMain).showNewMessage()
         }
 
         fragment.friend_list.layoutManager = LinearLayoutManager(this.context)
@@ -54,6 +55,7 @@ class AMOverview : Fragment() {
 
     fun onFriendListClick(v: View) {
         val friend = v.tag as Friend
+
         (activity as ActivityMain).showChat(friend)
     }
 

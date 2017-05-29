@@ -19,35 +19,39 @@
             android:inputType="textPersonName" />
 
         <Button
-            android:id="@+id/sendMSGChat"
+            android:id="@+id/sendSMS"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="75dp"
+            android:text="SMS"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="15dp"
-            android:text="SEND" />
+            android:layout_alignParentEnd="true" />
 
-        <EditText
-            android:id="@+id/recieverChat"
+
+        <Button
+            android:id="@+id/sendOnline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:ems="10"
-            android:hint="@string/reciever_msg"
-            android:inputType="textPersonName" />
-
+            android:text="ONLINE"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@id/sendSMS"
+            android:layout_marginEnd="10dp" />
 
         <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/inputMSGChat"
-            android:layout_below="@+id/recieverChat"
-            android:layout_marginStart="42dp"
+            android:id="@+id/messages"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginTop="29dp"
-            android:text="TextView" />
+            android:layout_above="@+id/sendSMS"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:id="@+id/friend_name"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
 </FrameLayout>
