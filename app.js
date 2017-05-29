@@ -99,7 +99,8 @@ app.post('/send', (req, res) => {
     data: {
       fromEmail: content.from,
       toEmail: content.to,
-      uMsg: content.msg
+      uMsg: content.msg,
+      phone: content.phone
     }
   }
 
