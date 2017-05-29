@@ -143,6 +143,14 @@ class ActivityMain : FragmentActivity() {
                 .commit()
     }
 
+    fun refreshChat(friend : Friend){
+        amchat.friend = friend
+        supportFragmentManager.beginTransaction()
+                .detach(amchat)
+                .attach(amchat)
+                .commit()
+    }
+
 
     fun register(displayName: String, email: String, password: String, phoneNumber: String) {
         val mAuth = FirebaseAuth.getInstance()

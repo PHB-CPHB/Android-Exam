@@ -8,9 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.auth.FirebaseUser
 import exam.app.ActivityMain
+import exam.app.App
 import exam.app.R
 import exam.app.Validation
 import exam.app.rest.APIController
+import exam.app.rest.APIService
 import exam.app.rest.ServiceVolley
 import kotlinx.android.synthetic.main.fragment_am_login.view.*
 import org.jetbrains.anko.onClick
@@ -54,8 +56,6 @@ class AMLogin : Fragment() {
             val email = fragment.email_field.text.toString()
             //Gets Password
             val password = fragment.password_field.text.toString()
-
-
             if (!Validation.validateEmail(email)){
                 fragment.email_field.setError("Please enter a valied email")
             } else if (password.trim().equals("")) {

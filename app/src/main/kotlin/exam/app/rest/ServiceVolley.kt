@@ -23,6 +23,7 @@ class ServiceVolley : ServiceInterface {
                     completionHandler(response)
                 },
                 Response.ErrorListener { error ->
+                    Log.d(TAG, "/post request fail! Error: ${error.message}")
                     VolleyLog.e(TAG, "/post request fail! Error: ${error.message}")
                     completionHandler(null)
                 }) {

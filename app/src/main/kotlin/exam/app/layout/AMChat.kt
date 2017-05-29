@@ -10,12 +10,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import exam.app.ActivityMain
 import exam.app.App
 import exam.app.Entity.Friend
 import exam.app.Entity.Message
+import exam.app.Entity.Status
 import exam.app.R
 import exam.app.database.DBController
+import exam.app.rest.APIService
 import kotlinx.android.synthetic.main.fragment_am_chat.view.*
+import org.jetbrains.anko.onClick
+import org.json.JSONObject
 
 class AMChat : Fragment() {
 
@@ -44,27 +49,73 @@ class AMChat : Fragment() {
 
         fragment.friend_name.text = friend!!.phonenumber
 
+        fragment.sendOnline.onClick {
+            val msg = fragment.inputMSGChat.text.toString()
+            onSendOnlineClick(msg, friend!!.email)
+        }
+
+        fragment.sendSMS.onClick {
+            val msg = fragment.inputMSGChat.text.toString()
+            onSendSMSClick(msg, friend!!.phonenumber)
+        }
+
         /**
          * This is that last thing that should happen in the fragment.
          * This where it actually returns the view
          */
         return fragment
     }
-    var smsManager : SmsManager = SmsManager.getDefault()
 
-    fun onSendClick(inputString : String, recieverString : String) {
-        var input: String = inputString
-        var reciever: String = recieverString
-        if (ContextCompat.checkSelfPermission(App.instance, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-            //getPermissionToReadSMS()
-        } else {
-            if (input == null && reciever == null || input == null && reciever == "" || input == "" && reciever == null) {
-                return Toast.makeText(App.instance, "OOppps something went wrong", Toast.LENGTH_SHORT).show()
+    fun onSendOnlineClick(message : String, receiver : String) {
+        val path = "/send"
+        val params = JSONObject()
+        params.put("from", receiver)
+        params.put("to", friend!!.email)
+        params.put("msg", message)
+        params.put("phone", App.instance.user!!.phonenumber)
+
+        APIService.apiController.post(path, params) { response ->
+            if(response != null) {
+                Log.d(TAG, response.toString())
+                if (!response!!.has("error")) {
+                    DBController.instance.insertMessage(Message(friend!!.email, friend!!.phonenumber, message, Status.SENT))
+                    (activity as ActivityMain).refreshChat(friend!!)
+                } else {
+                    Log.d(TAG, response.getString("error"))
+                    Toast.makeText(App.instance, "No user registered with that email address", Toast.LENGTH_SHORT)
+                }
             } else {
-                smsManager.sendTextMessage(reciever, null, input, null, null)
-                Toast.makeText(App.instance, "Message sent!", Toast.LENGTH_SHORT).show()
-
+                Log.d(TAG, "Response is NULL")
             }
         }
     }
+
+
+    var smsManager : SmsManager = SmsManager.getDefault()
+
+    fun onSendSMSClick(message : String, receiver : String) {
+        val smsManager : SmsManager = SmsManager.getDefault()
+        if (ContextCompat.checkSelfPermission(App.instance, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            getPermissionToReadSMS()
+        } else {
+            smsManager.sendTextMessage(receiver, null, message, null, null)
+            DBController.instance.insertMessage(Message("", receiver, message, Status.SENT))
+            (activity as ActivityMain).refreshChat(friend!!)
+        }
+    }
+
+    private val READ_SMS_PERMISSIONS_REQUEST = 1
+
+    fun getPermissionToReadSMS() {
+        if (ContextCompat.checkSelfPermission(App.instance, android.Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+            if (shouldShowRequestPermissionRationale(
+                    android.Manifest.permission.READ_SMS)) {
+                Toast.makeText(App.instance, "Please allow permission!", Toast.LENGTH_SHORT).show()
+            }
+            requestPermissions(arrayOf<String>(android.Manifest.permission.READ_SMS),
+                    READ_SMS_PERMISSIONS_REQUEST)
+        }
+    }
+
+
 }
