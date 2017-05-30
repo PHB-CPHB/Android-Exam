@@ -20,7 +20,6 @@ import exam.app.Entity.Friend
 import exam.app.Entity.Message
 import exam.app.Validation
 import exam.app.rest.APIService
-import exam.app.rest.ServiceVolley
 import kotlinx.android.synthetic.main.fragment_am_new_message.view.*
 import org.jetbrains.anko.onClick
 import org.json.JSONObject
@@ -28,7 +27,6 @@ import org.json.JSONObject
 
 class AMNewMessage : Fragment() {
     val TAG = "AMNewMessage"
-    val service = ServiceVolley()
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
