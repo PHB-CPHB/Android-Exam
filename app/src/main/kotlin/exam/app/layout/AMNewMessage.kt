@@ -60,36 +60,6 @@ class AMNewMessage : Fragment() {
         return fragment
     }
 
-    private val READ_SMS_PERMISSIONS_REQUEST = 1
-
-    fun getPermissionToReadSMS() {
-        if (ContextCompat.checkSelfPermission(App.instance, android.Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
-            if (shouldShowRequestPermissionRationale(
-                    android.Manifest.permission.READ_SMS)) {
-                Toast.makeText(App.instance, "Please allow permission!", Toast.LENGTH_SHORT).show()
-            }
-            requestPermissions(arrayOf<String>(android.Manifest.permission.READ_SMS),
-                    READ_SMS_PERMISSIONS_REQUEST)
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>,
-                                            grantResults: IntArray) {
-        // Make sure it's our original READ_CONTACTS request
-        if (requestCode == READ_SMS_PERMISSIONS_REQUEST) {
-            if (grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(App.instance, "Read SMS permission granted", Toast.LENGTH_SHORT).show()
-
-            } else {
-                Toast.makeText(App.instance, "Read SMS permission denied", Toast.LENGTH_SHORT).show()
-            }
-
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        }
-    }
-
     var smsManager : SmsManager = SmsManager.getDefault()
 
     fun onSendClick(input : String, receiver: String) {
@@ -97,7 +67,7 @@ class AMNewMessage : Fragment() {
         //var friendList : List<Friend> = App.instance.listOfFriends
 
         if (ContextCompat.checkSelfPermission(App.instance, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-            getPermissionToReadSMS()
+            (activity as ActivityMain).getPermissionToReadSMS()
         } else {
             if(Validation.validateEmail(receiver)){
 

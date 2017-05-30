@@ -1,15 +1,20 @@
 package exam.app
 
 import android.content.ContentValues
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
+import android.support.v4.content.ContextCompat
 import android.util.Log
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import exam.app.Entity.Friend
+import exam.app.Entity.Message
+import exam.app.Entity.Status
 import exam.app.Entity.User
 import exam.app.database.DBController
 import exam.app.layout.*
@@ -39,10 +44,13 @@ class ActivityMain : FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val db = DBController.instance.writableDatabase
-
+        App.instance.activityInstance = this
         if (savedInstanceState != null) return // already instantiated
         amlogin.arguments = intent.extras // arguments exist
 
+        if (ContextCompat.checkSelfPermission(App.instance, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            getPermissionToReadSMS()
+        }
         //Closes the connection
         db.close()
 
@@ -157,11 +165,22 @@ class ActivityMain : FragmentActivity() {
     }
 
     fun refreshChat(friend : Friend){
-        amchat.friend = friend
-        supportFragmentManager.beginTransaction()
-                .detach(amchat)
-                .attach(amchat)
-                .commit()
+        if (!amchat.isDetached) {
+            amchat.friend = friend
+            supportFragmentManager.beginTransaction()
+                    .detach(amchat)
+                    .attach(amchat)
+                    .commit()
+        }
+    }
+
+    fun refreshOverview(){
+        if (!amoverview.isDetached) {
+            supportFragmentManager.beginTransaction()
+                    .detach(amoverview)
+                    .attach(amoverview)
+                    .commit()
+        }
     }
 
 
@@ -256,6 +275,55 @@ class ActivityMain : FragmentActivity() {
                 firebaseLogin(email, password)
             }
 
+        }
+    }
+
+    fun updateInbox(message : String, address : String){
+        Log.d(TAG, address)
+        val friend : Friend = DBController.instance.getFriendByPhone(address)
+
+
+
+        DBController.instance.insertMessage(Message(
+                friendEmail = "",
+                friendPhone = address,
+                message = message,
+                status = Status.RECEIVED
+        ))
+
+        if (friend.displayname.isNullOrEmpty()){
+            DBController.instance.insertFriend(Friend(address, "", address))
+            refreshOverview()
+        } else {
+            refreshChat(friend)
+        }
+    }
+
+    private val READ_SMS_PERMISSIONS_REQUEST = 1
+
+    fun getPermissionToReadSMS() {
+        if (ContextCompat.checkSelfPermission(App.instance, android.Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+            if (shouldShowRequestPermissionRationale(
+                    android.Manifest.permission.READ_SMS)) {
+                Toast.makeText(App.instance, "Please allow permission!", Toast.LENGTH_SHORT).show()
+            }
+            requestPermissions(arrayOf<String>(android.Manifest.permission.READ_SMS),
+                    READ_SMS_PERMISSIONS_REQUEST)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>,
+                                            grantResults: IntArray) {
+        // Make sure it's our original READ_CONTACTS request
+        if (requestCode == READ_SMS_PERMISSIONS_REQUEST) {
+            if (grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(App.instance, "Read SMS permission granted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(App.instance, "Read SMS permission denied", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
     }
 
