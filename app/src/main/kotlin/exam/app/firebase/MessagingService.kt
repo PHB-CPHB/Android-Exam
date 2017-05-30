@@ -15,9 +15,13 @@ import exam.app.layout.AMChat
 import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Color
+import exam.app.Entity.Friend
 import exam.app.Entity.Message
 import exam.app.Entity.Status
+import exam.app.Entity.User
 import exam.app.database.DBController
+import exam.app.rest.APIService
+import org.json.JSONObject
 
 
 /**
@@ -34,6 +38,16 @@ class MessagingService : FirebaseMessagingService() {
                     message = p0!!.data["uMsg"]!!,
                     status = Status.RECEIVED
             ))
+
+            Log.d(TAG, p0!!.data["fromEmail"])
+            Log.d(TAG, p0!!.data["uPhone"])
+            Log.d(TAG, p0!!.data["uMsg"])
+
+            val friend = DBController.instance.getFriendByPhone(p0!!.data["uPhone"].toString())
+
+            if (friend.displayname.isNullOrEmpty()){
+                APIService.matchFriend(p0!!.data["uPhone"])
+            }
 
             val notificationBuilder : NotificationCompat.Builder =
                     NotificationCompat.Builder(this)

@@ -92,28 +92,28 @@ class AMNewMessage : Fragment() {
 
     var smsManager : SmsManager = SmsManager.getDefault()
 
-    fun onSendClick(input : String, reciever : String) {
+    fun onSendClick(input : String, receiver: String) {
 
         //var friendList : List<Friend> = App.instance.listOfFriends
 
         if (ContextCompat.checkSelfPermission(App.instance, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
             getPermissionToReadSMS()
         } else {
-            if(Validation.validateEmail(reciever)){
+            if(Validation.validateEmail(receiver)){
 
                 //Send online message
-                Log.d(TAG, reciever)
+                Log.d(TAG, receiver)
                 Log.d(TAG, "Friend found - sending message")
-                APIService.sendMessage(App.instance.user!!.displayName, reciever, input)
-                getMatchedFriend(reciever, "", input)
+                APIService.sendMessage(App.instance.user!!.displayName, receiver, input)
+                getMatchedFriend(receiver, "", input)
 
-            } else if (Validation.validatePhonenumber(reciever)) {
+            } else if (Validation.validatePhonenumber(receiver)) {
                 Log.d(TAG, "Looks like a phone number")
-                APIService.getMatchedFriendSMS(reciever)
-                smsManager.sendTextMessage(reciever, null, input, null, null)
-                DBController.instance.insertMessage(Message("", reciever, input, Status.SENT))
+                APIService.getMatchedFriendSMS(receiver)
+                smsManager.sendTextMessage(receiver, null, input, null, null)
+                DBController.instance.insertMessage(Message("", receiver, input, Status.SENT))
                 Toast.makeText(App.instance, "Message sent!", Toast.LENGTH_SHORT).show()
-                (activity as ActivityMain).newMsgToChat(DBController.instance.getFriendByPhone(reciever))
+                (activity as ActivityMain).newMsgToChat(DBController.instance.getFriendByPhone(receiver))
             } else {
                 Toast.makeText(App.instance, "We didn't recognize the receiver. Try with a valid email or phone number", Toast.LENGTH_SHORT)
             }

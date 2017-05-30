@@ -98,6 +98,7 @@ class ActivityMain : FragmentActivity() {
                         .beginTransaction()
                         .attach(amoverview)
                         .detach(amlogin)
+                        .detach(amcreate)
                         .commit()
 
     }

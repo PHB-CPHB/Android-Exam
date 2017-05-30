@@ -23,6 +23,7 @@ class APIService {
             params.put("to", to)
             params.put("from", from)
             params.put("msg", message)
+            params.put("phone", DBController.instance.getUser().phonenumber)
             //TODO: What has to happen with the returned data?
             apiController.post(path, params) { response ->
 
@@ -61,6 +62,32 @@ class APIService {
 
             APIService.apiController.post(path, params) { response ->
                 Log.d(APIService.TAG, response.toString())
+            }
+        }
+
+        fun matchFriend(phone : String?) {
+            val path = "/match"
+            val params = JSONObject()
+            if(!phone.isNullOrEmpty()) {
+                params.put("phone", phone)
+
+                APIService.apiController.post(path, params) {
+                    response ->
+                    Log.d(TAG, "waiting for response")
+                    if (response != null) {
+                        if (!response!!.has("error")) {
+                            Log.d(TAG, "Have user")
+                            var friend: Friend = Friend(
+                                    email = response.getString("email"),
+                                    displayname = response.getString("displayName"),
+                                    phonenumber = response.getString("phone")
+                            )
+                            DBController.instance.insertFriend(friend)
+                        }
+                    }
+                }
+            } else {
+                Log.d(TAG, "No user found")
             }
         }
 
