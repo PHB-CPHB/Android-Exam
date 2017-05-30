@@ -47,7 +47,7 @@ class AMChat : Fragment() {
             fragment.messages.append(it.message)
         }
 
-        fragment.friend_name.text = friend!!.phonenumber
+        fragment.friend_name.text = friend!!.displayname
 
         fragment.sendOnline.onClick {
             val msg = fragment.inputMSGChat.text.toString()

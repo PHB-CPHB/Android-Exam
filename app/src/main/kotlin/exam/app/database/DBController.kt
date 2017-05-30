@@ -78,6 +78,29 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
         }
     }
 
+    fun getUser() : User{
+        try {
+            var user : User = User("", "", "", "")
+            instance.use {
+                user = select("User")
+                        .parseSingle(
+                                rowParser {
+                                    id : Int,
+                                    displayName : String,
+                                    email : String,
+                                    phonenumber : String,
+                                    password : String
+                                    -> User(displayName, email ,phonenumber, password)
+                                }
+                        )
+            }
+            return user
+        } catch (ex: SQLiteException) {
+            println("Exception : " + ex)
+            return User("", "", "", "")
+        }
+    }
+
     fun insertFriend(friend: Friend) {
 //      instance.use {
 //           execSQL("INSERT INTO ${FriendTabel.name}  VALUES (NULL, '${friend.displayname}', '${friend.email}', '${friend.phonenumber}');")

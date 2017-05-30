@@ -7,6 +7,8 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.FirebaseMessagingService
 import exam.app.Entity.Friend
 import exam.app.Entity.User
 import exam.app.database.DBController
@@ -63,10 +65,23 @@ class ActivityMain : FragmentActivity() {
                 .detach(amchat)
                 .detach(amnewmessage)
                 .detach(amcreate)
+                .detach(amlogin)
                 .commit()
-        var refreshedToken : String? = FirebaseInstanceId.getInstance().getToken()
+        var refreshedToken : String? = FirebaseInstanceId.getInstance().token
+
+        val user = DBController.instance.getUser()
+
+
         Log.d(ContentValues.TAG, "Refreshed token: " + refreshedToken)
         App.instance.regToken = refreshedToken
+        if(!user.email.isNullOrEmpty() && !user.password.isNullOrEmpty()) {
+            firebaseLogin(user.email, user.password)
+        } else {
+            supportFragmentManager
+                    .beginTransaction()
+                    .attach(amlogin)
+                    .commit()
+        }
     }
 
     override fun onBackPressed() {
@@ -79,12 +94,10 @@ class ActivityMain : FragmentActivity() {
         // Function that show the amoverview fragment
             //Hvis tid kig på at bruge KeyStore.PasswordProtection
     fun showOverview(){
-
                 supportFragmentManager
                         .beginTransaction()
-                        .attach(amoverview).addToBackStack("tag")
+                        .attach(amoverview)
                         .detach(amlogin)
-                        .detach(amnewmessage)
                         .commit()
 
     }
@@ -118,7 +131,6 @@ class ActivityMain : FragmentActivity() {
                 .beginTransaction()
                 .attach(amchat).addToBackStack("tag")
                 .detach(amoverview)
-                .detach(amnewmessage)
                 .commit()
     }
 
