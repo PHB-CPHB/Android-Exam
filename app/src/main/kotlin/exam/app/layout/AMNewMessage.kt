@@ -19,7 +19,6 @@ import exam.app.database.DBController
 import exam.app.Entity.Friend
 import exam.app.Entity.Message
 import exam.app.Validation
-import exam.app.rest.APIController
 import exam.app.rest.APIService
 import exam.app.rest.ServiceVolley
 import kotlinx.android.synthetic.main.fragment_am_new_message.view.*
@@ -30,8 +29,6 @@ import org.json.JSONObject
 class AMNewMessage : Fragment() {
     val TAG = "AMNewMessage"
     val service = ServiceVolley()
-    val apiController = APIController(service)
-    val dbController = DBController();
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
