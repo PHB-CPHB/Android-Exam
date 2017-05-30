@@ -38,15 +38,4 @@ class App : Application() {
         request.tag = if (TextUtils.isEmpty(tag)) TAG else tag
         requestQueue?.add(request)
     }
-
-    fun <T> addToRequestQueue(request: Request<T>) {
-        request.tag = TAG
-        requestQueue?.add(request)
-    }
-
-    fun cancelPendingRequests(tag: Any) {
-        if (requestQueue != null) {
-            requestQueue!!.cancelAll(tag)
-        }
-    }
 }

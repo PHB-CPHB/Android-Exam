@@ -3,8 +3,10 @@ package exam.app.database
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
+import exam.app.ActivityMain
 import exam.app.App
 import exam.app.Entity.*
+import exam.app.layout.AMChat
 import org.jetbrains.anko.db.*
 
 class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(context, DBController.DB_NAME, null, DBController.DB_VERSION) {
@@ -102,9 +104,6 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
     }
 
     fun insertFriend(friend: Friend) {
-//      instance.use {
-//           execSQL("INSERT INTO ${FriendTabel.name}  VALUES (NULL, '${friend.displayname}', '${friend.email}', '${friend.phonenumber}');")
-//       }
         instance.use {
             insert(
                     FriendTabel.name,
@@ -114,12 +113,10 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
                     FriendTabel.phonenumber to friend.phonenumber
             )
         }
+
     }
 
     fun insertMessage(message: Message) {
-       /* instance.use {
-            execSQL("INSERT INTO ${MessageTabel.name} VALUES (null, ${message.friendEmail}, ${message.friendPhone}, ${message.message}, ${message.status});")
-        }*/
         instance.use {
             insert(
                     MessageTabel.name,

@@ -35,12 +35,13 @@ class SMSReceiver : BroadcastReceiver(){
                 messages[i] = SmsMessage.createFromPdu(pdus[i] as ByteArray, format)
                 sb.append(messages[i]!!.getMessageBody())
             }
-            val sender = messages[0]!!.getOriginatingAddress()
+            val sender = messages[0]!!.originatingAddress.substring(3)
             val message = sb.toString()
             Log.d(TAG, message)
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             // prevent any other broadcast receivers from receiving broadcast
             // abortBroadcast();
+
             App.instance.activityInstance!!.updateInbox(message, sender)
         }
 

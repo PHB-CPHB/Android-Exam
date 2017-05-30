@@ -74,7 +74,7 @@ class AMCreate : Fragment() {
             } else if (password.trim().equals("")) {
                 fragment.password_field.setError("Please enter a Password")
             } else {
-                Log.d(TAG, "Logging in...")
+                Log.d(TAG, "Creating user")
                 (activity as ActivityMain).register(displayName, email, password, phonenumber)
             }
         }

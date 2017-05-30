@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="75dp"
-            android:text="SMS"
+            android:text="@string/sens_sms"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true" />
 
@@ -32,25 +32,36 @@
             android:id="@+id/sendOnline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ONLINE"
+            android:text="@string/send_online"
             android:layout_alignParentBottom="true"
-            android:layout_alignRight="@id/sendSMS"
+            android:layout_alignEnd="@id/sendSMS"
             android:layout_marginEnd="10dp" />
 
-        <TextView
+        <ScrollView
             android:id="@+id/messages"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="29dp"
             android:layout_above="@+id/sendSMS"
             android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:background="@android:color/transparent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/message_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </android.support.v7.widget.RecyclerView>
+        </ScrollView>
 
         <TextView
             android:id="@+id/friend_name"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:textAlignment="center"
+            android:textSize="25sp"
             android:layout_centerHorizontal="true" />
 
     </RelativeLayout>

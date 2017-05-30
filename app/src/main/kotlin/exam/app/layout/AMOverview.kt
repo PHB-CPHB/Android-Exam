@@ -53,9 +53,12 @@ class AMOverview : Fragment() {
         return fragment
     }
 
+    /**
+     *  When a friend is clicked we shows the amchat
+     *  @param View
+     */
     fun onFriendListClick(v: View) {
         val friend = v.tag as Friend
-
         (activity as ActivityMain).showChat(friend)
     }
 
