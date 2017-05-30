@@ -3,10 +3,8 @@ package exam.app.database
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
-import exam.app.ActivityMain
 import exam.app.App
 import exam.app.Entity.*
-import exam.app.layout.AMChat
 import org.jetbrains.anko.db.*
 
 class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(context, DBController.DB_NAME, null, DBController.DB_VERSION) {
@@ -135,76 +133,6 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
         }
     }
 
-  /*  fun testData(db: SQLiteDatabase) {
-
-        db.insert(
-                UserTabel.name,
-                UserTabel.id to 1,
-                UserTabel.displayName to "test",
-                UserTabel.email to "test@test.dk",
-                UserTabel.phonenumber to "22334455",
-                UserTabel.password to "1234"
-
-        )
-
-        db.insert(
-                FriendTabel.name,
-                FriendTabel.id to 1,
-                FriendTabel.displayname to "Phillip",
-                FriendTabel.email to "philliphb@gmail.com",
-                FriendTabel.phonenumber to 28732722,
-                FriendTabel.message to null
-        )
-
-        db.insert(
-                FriendTabel.name,
-                FriendTabel.id to 2,
-                FriendTabel.displayname to "Hazem",
-                FriendTabel.email to null,
-                FriendTabel.phonenumber to 52929055,
-                FriendTabel.message to null
-        )
-
-        db.insert(
-                FriendTabel.name,
-                FriendTabel.id to 3,
-                FriendTabel.displayname to "Kasper",
-                FriendTabel.email to "kasper.vetter@live.dk",
-                FriendTabel.phonenumber to null,
-                FriendTabel.message to null
-        )
-    }*/
-
-/*
-    fun getUser(currentUsername : String, userEmail : String, userPhonenumber : String, userToken : String) : Boolean {
-
-       try {
-           var user: User? = null
-           instance.use {
-               user = select("User")
-                       .where(
-                               "(username = {currentUser}) and (email = {userE}) and " +
-                               "(phonenumber = {userPhone}) and (token = {userToken})",
-                               "currentUser" to currentUsername,
-                               "userE" to userEmail,
-                               "userPhone" to userPhonenumber,
-                               "userToken" to userToken)
-                       .parseOpt(
-                               rowParser {
-                                   id: Int, displayName: String, email: String, phonenumber: String, token: String ->
-                                   User(firebase, phonenumber, password)
-                               }
-                       )
-           }
-           println(user)
-           return user != null
-       } catch (ex : SQLiteException) {
-           println(ex)
-           return false;
-       }
-    }
-*/
-
     /**
      * Get all the friends on the phone.
      */
@@ -229,29 +157,6 @@ class DBController(context: Context = App.instance) : ManagedSQLiteOpenHelper(co
             return emptyList()
         }
 
-    }
-
-    fun getMessages(): List<Message> {
-        try {
-            var messages : List<Message> = emptyList()
-            instance.use {
-                messages = select("Message")
-                        .parseList(
-                                rowParser {
-                                    id : Int,
-                                    friendEmail : String,
-                                    friendPhone : String,
-                                    message : String,
-                                    status : String
-                                    -> Message(friendEmail, friendPhone, message , Status.valueOf(status))
-                                }
-                        )
-            }
-            return messages
-        } catch (ex: SQLiteException) {
-            println("Exception : " + ex)
-            return emptyList()
-        }
     }
 
     fun getMessagesByFriend(phone : String): List<Message> {

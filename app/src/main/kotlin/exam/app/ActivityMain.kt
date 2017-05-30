@@ -6,22 +6,16 @@ import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
 import android.util.Log
-import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.iid.FirebaseInstanceId
-import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.FirebaseMessagingService
 import exam.app.Entity.Friend
 import exam.app.Entity.Message
 import exam.app.Entity.Status
 import exam.app.Entity.User
 import exam.app.database.DBController
 import exam.app.layout.*
-import exam.app.rest.APIController
 import exam.app.rest.APIService
 import exam.app.rest.APIService.Companion.updateToken
-import exam.app.rest.ServiceVolley
 import org.jetbrains.anko.toast
 import org.json.JSONObject
 
@@ -36,8 +30,6 @@ class ActivityMain : FragmentActivity() {
     val amchat = AMChat()
     val amnewmessage = AMNewMessage()
     val amcreate = AMCreate()
-    val service = ServiceVolley()
-    val apiController = APIController(service)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,14 +43,11 @@ class ActivityMain : FragmentActivity() {
         if (ContextCompat.checkSelfPermission(App.instance, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
             getPermissionToReadSMS()
         }
-        //Closes the connection
         db.close()
 
         //Here we add all of our fragmets and decide which one to show.
         supportFragmentManager
                 .beginTransaction()
-                // .add takes the fragment and makes it so make sure all fragments are here
-                //!!!LÆS OP!!!
                 .add(R.id.fragment_container, amlogin)
                 .add(R.id.fragment_container, amoverview)
                 .add(R.id.fragment_container, amchat)
@@ -66,7 +55,7 @@ class ActivityMain : FragmentActivity() {
                 .add(R.id.fragment_container, amcreate)
                 /**
                  * Show and hide fragments
-                 * .hide hides all the fragments we dont want to show right now.
+                 * Detaches stops the fragment and attaches runs create and resume
                  * amlogin should be the one that we are starting on.
                  */
                 .detach(amoverview)
@@ -75,13 +64,16 @@ class ActivityMain : FragmentActivity() {
                 .detach(amcreate)
                 .detach(amlogin)
                 .commit()
+
+        /**
+         * Set the Token so we can receive messages from firebase
+         */
         var refreshedToken : String? = FirebaseInstanceId.getInstance().token
-
         val user = DBController.instance.getUser()
-
-
         Log.d(ContentValues.TAG, "Refreshed token: " + refreshedToken)
         App.instance.regToken = refreshedToken
+
+        // Automatic login
         if(!user.email.isNullOrEmpty() && !user.password.isNullOrEmpty()) {
             firebaseLogin(user.email, user.password)
         } else {
@@ -138,7 +130,8 @@ class ActivityMain : FragmentActivity() {
         amchat.friend = friend
         supportFragmentManager
                 .beginTransaction()
-                .attach(amchat).addToBackStack("tag")
+                .attach(amchat)
+                .addToBackStack("tag")
                 .detach(amoverview)
                 .commit()
     }
@@ -147,7 +140,8 @@ class ActivityMain : FragmentActivity() {
         amchat.friend = friend
         supportFragmentManager
                 .beginTransaction()
-                .attach(amchat).addToBackStack("tag")
+                .attach(amchat)
+                .addToBackStack("tag")
                 .detach(amnewmessage)
                 .commit()
     }
@@ -158,14 +152,16 @@ class ActivityMain : FragmentActivity() {
         supportFragmentManager
                 .beginTransaction()
                 .attach(amnewmessage)
-                .detach(amoverview).addToBackStack("tag")
+                .detach(amoverview)
+                .addToBackStack("tag")
                 .commit()
     }
 
     fun refreshChat(friend : Friend){
         if (!amchat.isDetached) {
             amchat.friend = friend
-            supportFragmentManager.beginTransaction()
+            supportFragmentManager
+                    .beginTransaction()
                     .detach(amchat)
                     .attach(amchat)
                     .commit()
@@ -174,7 +170,8 @@ class ActivityMain : FragmentActivity() {
 
     fun refreshOverview(){
         if (!amoverview.isDetached) {
-            supportFragmentManager.beginTransaction()
+            supportFragmentManager
+                    .beginTransaction()
                     .detach(amoverview)
                     .attach(amoverview)
                     .commit()
@@ -205,12 +202,10 @@ class ActivityMain : FragmentActivity() {
      */
     fun firebaseLogin(email : String, password : String) {
         val mAuth = FirebaseAuth.getInstance()
-        var firebaseUser : FirebaseUser? = null
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) {
             task ->
                 if(task.isSuccessful){
                     Log.d(TAG, "signInWithEmail:success")
-                    firebaseUser = mAuth.currentUser!!
                     Log.d(TAG, "User exists, matching...")
                     matchUser(email, password)
                 } else {
@@ -225,14 +220,13 @@ class ActivityMain : FragmentActivity() {
     fun matchUser(email : String?, password: String) {
         val path = "/match"
         val params = JSONObject()
-
-            params.put("email", email)
+        params.put("email", email)
 
         APIService.apiController.post(path, params) {
             response ->
             Log.d(TAG, "waiting for response")
             if(response !=  null) {
-                if (!response!!.has("error")) {
+                if (!response.has("error")) {
                     Log.d(TAG, "Have user")
                     var user: User = User(
                             email = response.getString("email"),
@@ -243,7 +237,6 @@ class ActivityMain : FragmentActivity() {
                     DBController.instance.clearUserTable()
                     DBController.instance.insertUser(user)
                     App.instance.user = user
-                    Log.d(APIService.TAG, App.instance.regToken!!)
                     App.instance.listOfFriends = DBController.instance.getFriends()
                     updateToken(user.email, App.instance.regToken!!, user.phonenumber)
                     Log.d(TAG, "Showing overview")
@@ -267,7 +260,7 @@ class ActivityMain : FragmentActivity() {
         params.put("token", App.instance.regToken)
 
         APIService.apiController.post(path, params) { response ->
-            if (response!!.has("error")){
+            if (response != null && response.has("error")){
                 Log.d(APIService.TAG, response.toString())
             } else {
                 Log.d(APIService.TAG, "Logging in the user")
@@ -277,21 +270,19 @@ class ActivityMain : FragmentActivity() {
         }
     }
 
-    fun updateInbox(message : String, address : String){
-        Log.d(TAG, address)
-        val friend : Friend = DBController.instance.getFriendByPhone(address)
+    fun updateInbox(message : String, phone: String){
+        val friend : Friend = DBController.instance.getFriendByPhone(phone)
 
-
-
+        //TODO: Missing match friend on server
         DBController.instance.insertMessage(Message(
                 friendEmail = "",
-                friendPhone = address,
+                friendPhone = phone,
                 message = message,
                 status = Status.RECEIVED
         ))
 
         if (friend.displayname.isNullOrEmpty()){
-            DBController.instance.insertFriend(Friend(address, "", address))
+            DBController.instance.insertFriend(Friend(phone, "", phone))
             refreshOverview()
         } else {
             refreshChat(friend)
@@ -302,10 +293,7 @@ class ActivityMain : FragmentActivity() {
 
     fun getPermissionToReadSMS() {
         if (ContextCompat.checkSelfPermission(App.instance, android.Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
-            if (shouldShowRequestPermissionRationale(
-                    android.Manifest.permission.READ_SMS)) {
-                Toast.makeText(App.instance, "Please allow permission!", Toast.LENGTH_SHORT).show()
-            }
+            shouldShowRequestPermissionRationale(android.Manifest.permission.READ_SMS)
             requestPermissions(arrayOf<String>(android.Manifest.permission.READ_SMS),
                     READ_SMS_PERMISSIONS_REQUEST)
         }
@@ -314,16 +302,9 @@ class ActivityMain : FragmentActivity() {
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>,
                                             grantResults: IntArray) {
-        // Make sure it's our original READ_CONTACTS request
-        if (requestCode == READ_SMS_PERMISSIONS_REQUEST) {
-            if (grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(App.instance, "Read SMS permission granted", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(App.instance, "Read SMS permission denied", Toast.LENGTH_SHORT).show()
-            }
-        } else {
+
+        if (requestCode != READ_SMS_PERMISSIONS_REQUEST)
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        }
     }
 
 

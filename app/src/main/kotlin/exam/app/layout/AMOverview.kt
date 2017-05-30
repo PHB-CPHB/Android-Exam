@@ -64,12 +64,7 @@ class AMOverview : Fragment() {
 
     override fun onResume() {
         Log.d(TAG, "RESUME")
-        var friends = DBController.instance.getFriends()
-        friends.forEach {
-            Log.d(TAG, it.email)
-        }
         super.onResume()
-        //this.friend_list.adapter = FriendsList(App.instance.listOfFriends, this)
         if (App.instance.user == null) overview_label.text = "No user!!!"
         else {
             overview_label.text = App.instance.user?.displayName

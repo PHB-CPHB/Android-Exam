@@ -30,7 +30,6 @@
             android:hint="@string/username_label"
             android:inputType="textPersonName"
             android:textAlignment="center"
-            android:text="Mikkel"
             android:layout_below="@+id/welcome_message"
             android:layout_alignLeft="@+id/email_field"
             android:layout_alignStart="@+id/email_field" />
@@ -45,8 +44,7 @@
             android:ems="10"
             android:hint="@string/email_label"
             android:inputType="textEmailAddress"
-            android:textAlignment="center"
-            android:text="mzhjensen@gmail.com"/>
+            android:textAlignment="center"/>
 
         <EditText
             android:id="@+id/phone_number_field"
@@ -62,8 +60,7 @@
             android:hint="@string/phonenumber_label"
             android:inputType="phone"
             android:maxLength="8"
-            android:textAlignment="center"
-            android:text="53640232"/>
+            android:textAlignment="center"/>
 
         <EditText
             android:id="@+id/password_field"
@@ -78,8 +75,7 @@
             android:layout_below="@+id/phone_number_field"
             android:layout_marginTop="33dp"
             android:ems="10"
-            android:inputType="textPassword"
-            android:text="123456"/>
+            android:inputType="textPassword"/>
 
         <Button
             android:id="@+id/create_user"

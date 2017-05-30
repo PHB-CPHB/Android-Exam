@@ -7,9 +7,7 @@ data class User(
         val email : String,
         val phonenumber : String,
         val password : String
-) {
-    //TODO If users need any methodes
-}
+)
 
 
 
