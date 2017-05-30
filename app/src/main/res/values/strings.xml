@@ -23,7 +23,8 @@
     <string name="send_location">Send Location</string>
     <string name="send_picture">Send Picture</string>
      <string name="send_audio">Send Audio</string>
-     
+     <string name="sens_sms">SMS</string>
+    <string name="send_online">ONLINE</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string> 

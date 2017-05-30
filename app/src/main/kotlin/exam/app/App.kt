@@ -12,7 +12,6 @@ import exam.app.Entity.User
 class App : Application() {
     val TAG = "APP"
     var regToken : String? = null
-
     var user: User? = null
     var listOfFriends : List<Friend> = emptyList()
 

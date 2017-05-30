@@ -130,8 +130,6 @@ class ActivityMain : FragmentActivity() {
                 .detach(amnewmessage)
                 .commit()
     }
-
-
     /**
      * Function that shows New Message
      */
@@ -153,6 +151,7 @@ class ActivityMain : FragmentActivity() {
 
 
     fun register(displayName: String, email: String, password: String, phoneNumber: String) {
+        Log.d(TAG, "Registering at Firebase")
         val mAuth = FirebaseAuth.getInstance()
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) {
             task ->

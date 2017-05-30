@@ -4,6 +4,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.LinearLayoutManager
 import android.telephony.SmsManager
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,6 +20,7 @@ import exam.app.R
 import exam.app.database.DBController
 import exam.app.rest.APIService
 import kotlinx.android.synthetic.main.fragment_am_chat.view.*
+import kotlinx.android.synthetic.main.fragment_am_overview.view.*
 import org.jetbrains.anko.onClick
 import org.json.JSONObject
 
@@ -41,11 +43,16 @@ class AMChat : Fragment() {
          *  EX. fragment.BUTTONNAME
          */
         val fragment = inflater.inflate(R.layout.fragment_am_chat, container, false)
+
+        /**
+         * Get messages from the database
+         */
         messages = DBController.instance.getMessagesByFriend(friend!!.phonenumber!!)
         Log.d(TAG, friend!!.phonenumber)
-        messages.forEach {
-            fragment.messages.append(it.message)
-        }
+
+        fragment.message_view.layoutManager = LinearLayoutManager(this.context)
+        fragment.message_view.adapter = MessageViewAdapter(messages, this)
+
 
         fragment.friend_name.text = friend!!.phonenumber
 
