@@ -1,5 +1,7 @@
 # Android-Exam
 
+### NOTE: The private key that can be found in earlier commits were just an example key, not an actual key.
+
 GET @ "/users"
   
 // Returns all users from mongodb
